@@ -9,9 +9,20 @@ resource "aws_vpc" "smpip_vpc" {
 
 # START REGION SUBNETS
 
-resource "aws_subnet" "public_subnet" {
+resource "aws_subnet" "public_subnet1" {
   vpc_id     = aws_vpc.smpip_vpc.id
+  availability_zone = "eu-west-1a"
   cidr_block = "10.0.1.0/24"
+
+  tags = {
+    Name = "smpip_public_subnet"
+  }
+}
+
+resource "aws_subnet" "public_subnet2" {
+  vpc_id     = aws_vpc.smpip_vpc.id
+  availability_zone = "eu-west-1c"
+  cidr_block = "10.0.2.0/24"
 
   tags = {
     Name = "smpip_public_subnet"
@@ -20,7 +31,7 @@ resource "aws_subnet" "public_subnet" {
 
 resource "aws_subnet" "services_subnet" {
   vpc_id     = aws_vpc.smpip_vpc.id
-  cidr_block = "10.0.2.0/24"
+  cidr_block = "10.0.3.0/24"
 
   tags = {
     Name = "smpip_services_subnet"
@@ -29,7 +40,7 @@ resource "aws_subnet" "services_subnet" {
 
 resource "aws_subnet" "db_subnet" {
   vpc_id     = aws_vpc.smpip_vpc.id
-  cidr_block = "10.0.3.0/24"
+  cidr_block = "10.0.4.0/24"
 
   tags = {
     Name = "smpip_db_subnet"
@@ -60,8 +71,13 @@ resource "aws_route_table" "public_route_table" {
   }
 }
 
-resource "aws_route_table_association" "public_route_table_association" {
-  subnet_id      = aws_subnet.public_subnet.id
+resource "aws_route_table_association" "public1_route_table_association" {
+  subnet_id      = aws_subnet.public_subnet1.id
+  route_table_id = aws_route_table.public_route_table.id
+}
+
+resource "aws_route_table_association" "public2_route_table_association" {
+  subnet_id      = aws_subnet.public_subnet2.id
   route_table_id = aws_route_table.public_route_table.id
 }
 
