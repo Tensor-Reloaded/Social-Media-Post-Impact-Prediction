@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import tweepy as tw
 
 
-class TwitterAdapter:
+class TwitterAPIAdapter:
 
     def __init__(self, secrets):
         self.auth = tw.OAuthHandler(secrets.API_KEY,
@@ -14,3 +14,9 @@ class TwitterAdapter:
     @staticmethod
     def get_cursor(method, *args, **kwargs):
         return tw.Cursor(method, *args, **kwargs)
+
+
+class PhotoImporter:
+    @staticmethod
+    def import_photo(url):
+        pass

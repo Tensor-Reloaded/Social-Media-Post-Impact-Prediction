@@ -1,21 +1,10 @@
-from src.twitter_scrapping import TwitterScrapper
-from src.twitter_scrapping_strategy import SimpleScrappingStrategy, ScrappingParameters
-from src.tweet_data_exporting import TweetLocalExporter, TweetConsoleExporter
-from src.twitter_importing import TwitterAdapter
-from conf.env_secrets import TwitterSecrets
-
-
-def get_parameters() -> ScrappingParameters:
-    return ScrappingParameters(query='travel',
-                               language='en')
-
+from src.logic import SimpleConsoleOrchestrator, NoneValueConsoleOrchestrator
+import datetime as dt
 
 if __name__ == '__main__':
-    exporter = TweetConsoleExporter()
-    importer = TwitterAdapter(TwitterSecrets)
-    strategy_params = get_parameters()
-    strategy = SimpleScrappingStrategy(twitter_adapter=importer,
-                                       data_exporter=exporter,
-                                       params=strategy_params)
-    scrapper = TwitterScrapper(strategy)
-    scrapper.start(threads=1)
+    process = SimpleConsoleOrchestrator(
+        q="travel OR travelling",
+        lang="en",
+        until=dt.datetime(2021, 10, 8, 0, 0, 0)
+    )
+    process.main()
