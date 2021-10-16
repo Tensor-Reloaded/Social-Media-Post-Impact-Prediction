@@ -27,7 +27,7 @@ class SimpleScrappingStrategy(TwitterScrappingStrategy):
 class NoneValueScrappingStrategy(TwitterScrappingStrategy):
 
     def apply(self):
-        tweet_factory = TweetFactoryBuilder(NoneTweetFactory).get_factory()
+        tweet_factory = TweetFactoryBuilder.get_factory(NoneTweetFactory)
         api = self.twitter_adapter.get_api()
         cursor = self.twitter_adapter.get_cursor(api.search_tweets, **self.params)
         for tweet in cursor.items():

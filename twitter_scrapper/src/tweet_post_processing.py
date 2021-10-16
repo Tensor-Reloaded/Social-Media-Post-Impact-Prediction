@@ -4,15 +4,16 @@ from typing import List
 
 
 class TweetFactoryBuilder:
-    _factory = None
+    _factories = {}
 
     def __init__(self, class_type):
         self.class_type = class_type
 
-    def get_factory(self):
-        if not self._factory:
-            self._factory = self.class_type()
-        return self._factory
+    @staticmethod
+    def get_factory(class_type):
+        if class_type not in TweetFactoryBuilder._factories.keys():
+            TweetFactoryBuilder._factories[class_type.__class__] = class_type()
+        return TweetFactoryBuilder._factories[class_type.__class__]
 
 
 class TweetFactory(ABC):
