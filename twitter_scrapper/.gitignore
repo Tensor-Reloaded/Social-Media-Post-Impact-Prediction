@@ -152,3 +152,4 @@ fabric.properties
 
 # Custom
 conf/env_secrets.py
+res/*.json

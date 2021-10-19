@@ -24,11 +24,30 @@ class TweetFactory(ABC):
     def mass_create(self, data) -> List[Tweet]:
         return [self.create(piece) for piece in data]
 
+    @staticmethod
+    def get_favorite_count(data):
+        try:
+            return data.retweeted_status.favorite_count
+        except:
+            return data.favorite_count
+
 
 class RawDataTweetFactory(TweetFactory):
 
     def create(self, data) -> Tweet:
         """Maps the raw data to the information available in a Tweet object, then creates it"""
+        return Tweet(
+            tweet_id=data.id,
+            tweet_text=data.text.replace('"', "'"),
+            tweet_image=data.entities['media'][0]['media_url'],
+            tweet_impact=self.get_favorite_count(data),
+            tweet_posted_date=data.created_at.strftime("%Y.%m.%d"),
+            tweet_source=data.source,
+            user_id=data.author.id,
+            user_followers=data.author.followers_count,
+            user_tweets_count=data.author.statuses_count,
+            retweeted=data.retweeted
+        )
 
 
 class ProcessDataTweetFactory(TweetFactory):
