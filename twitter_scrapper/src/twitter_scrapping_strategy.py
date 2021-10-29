@@ -25,15 +25,18 @@ class SimpleScrappingStrategy(TwitterScrappingStrategy):
         api = self.twitter_adapter.get_api()
         cursor = self.twitter_adapter.get_cursor(api.search_tweets, include_entities=True, **self.params)
         tweet_list = []
+        counter = 0
         try:
             for tweet in cursor.items():
                 if tweet.created_at.strftime("%Y.%m.%d") != self.target_date:
                     break
+                counter += 1
                 if self.tweet_validation_method(tweet):
                     tweet_list.append(self.tweet_factory.create(tweet))
         except Exception as e:
             print(e, e.__traceback__)
-        print(len(tweet_list))
+        print(f"Tried: {counter}")
+        print(f"Fetched: {len(tweet_list)}")
         self.data_exporter.export(tweet_list)
 
 
