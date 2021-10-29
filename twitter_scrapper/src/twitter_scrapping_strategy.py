@@ -36,6 +36,7 @@ class SimpleScrappingStrategy(TwitterScrappingStrategy):
         except Exception as e:
             print(e, e.__traceback__)
         print(f"Tried: {counter}")
+        print(f"Fetch rate: {round(len(tweet_list) / (counter+0.0000001), ndigits=2)} %")
         print(f"Fetched: {len(tweet_list)}")
         self.data_exporter.export(tweet_list)
 
