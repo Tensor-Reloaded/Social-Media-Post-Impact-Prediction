@@ -1,9 +1,10 @@
 import React from "react";
+import HelloWorld from "./HelloWorld";
 
 export default function App() {
   return (
     <div>
-      <h1>Hello World</h1>
+      <HelloWorld />
     </div>
   );
 }
