@@ -29,9 +29,11 @@ module "ecs" {
   vpc_id           = module.networking.vpc_id
   public_subnet_ids = module.networking.public_subnet_ids
   subnet_id        = module.networking.services_subnet_id
+  allowed_cidr     = module.networking.services_cidr
   desired_capacity = 1
-  min_size         = 0
+  min_size         = 1
   max_size         = 1
   service_names    = local.services
   repositories     = module.ecr.repositories
+  instance_type    = "t2.micro"
 }

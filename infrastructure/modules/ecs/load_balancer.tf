@@ -11,6 +11,7 @@ resource "aws_lb" "smpip_lb" {
   internal           = false
   load_balancer_type = "application"
   subnets            = var.public_subnet_ids
+  security_groups    = [aws_security_group.lb_sg.id]
 }
 
 resource "aws_lb_listener" "ui_core_lb_listener" {

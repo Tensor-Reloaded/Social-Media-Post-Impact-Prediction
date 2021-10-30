@@ -14,6 +14,7 @@ resource "aws_ecs_service" "ui_core_service" {
 
     network_configuration {
         subnets = [var.subnet_id]
+        security_groups = [aws_security_group.default_sg.id]
     }
 
     load_balancer {

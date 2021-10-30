@@ -67,7 +67,7 @@ resource "aws_route_table" "public_route_table" {
   }
   
   tags = {
-    Name = "smpip_rt"
+    Name = "smpip_rt_public"
   }
 }
 
@@ -94,9 +94,9 @@ resource "aws_eip" "private_subnet_eip" {
   }
 }
 
-resource "aws_nat_gateway" "example" {
+resource "aws_nat_gateway" "natgw" {
   allocation_id = aws_eip.private_subnet_eip.id
-  subnet_id     = aws_subnet.services_subnet.id
+  subnet_id     = aws_subnet.public_subnet1.id
 
   tags = {
     Name = "smpip_nat"
@@ -105,4 +105,26 @@ resource "aws_nat_gateway" "example" {
   depends_on = [aws_internet_gateway.igw]
 }
 
+resource "aws_route_table" "private_route_table" {
+  vpc_id = aws_vpc.smpip_vpc.id
+
+  route {
+      cidr_block = "0.0.0.0/0"
+      gateway_id = aws_nat_gateway.natgw.id
+  }
+  
+  tags = {
+    Name = "smpip_rt_private"
+  }
+}
+
+resource "aws_route_table_association" "services_route_table_association" {
+  subnet_id      = aws_subnet.services_subnet.id
+  route_table_id = aws_route_table.private_route_table.id
+}
+
+resource "aws_route_table_association" "db_route_table_association" {
+  subnet_id      = aws_subnet.db_subnet.id
+  route_table_id = aws_route_table.private_route_table.id
+}
 # END REGION PRIVATE SUBNET CONFIGURATION
