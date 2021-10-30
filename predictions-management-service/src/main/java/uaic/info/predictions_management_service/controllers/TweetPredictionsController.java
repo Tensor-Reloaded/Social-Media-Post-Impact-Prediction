@@ -13,6 +13,7 @@ import uaic.info.predictions_management_service.services.TweetPredictionsService
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/predictions")
@@ -21,8 +22,8 @@ public class TweetPredictionsController {
     private final TweetPredictionsService tweetPredictionsService;
 
     @GetMapping
-    public TweetPrediction getAll() {
-        return tweetPredictionsService.getAllByUserId(userId);
+    public List<TweetPrediction> getAll() {
+        return tweetPredictionsService.getAllByUserId(1L);
     }
 
     @GetMapping("/{id}")
