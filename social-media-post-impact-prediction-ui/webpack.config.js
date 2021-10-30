@@ -15,7 +15,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|tsx)$/,
         use: "babel-loader",
       },
       {
@@ -34,4 +34,7 @@ module.exports = {
       filename: "index.html",
     }),
   ],
+  resolve: {
+    extensions: [".tsx", ".js"],
+  }
 };
