@@ -6,6 +6,12 @@ terraform {
     key            = "terraform.tfstate"
     region         = "eu-west-1"
   }
+  required_providers {
+    mongodbatlas = {
+      source = "mongodb/mongodbatlas"
+      version = "1.0.2"
+    }
+  }
 }
 
 locals {
@@ -36,4 +42,8 @@ module "ecs" {
   service_names    = local.services
   repositories     = module.ecr.repositories
   instance_type    = "t2.micro"
+}
+
+module "rds" {
+  source = "../modules/rds"
 }
