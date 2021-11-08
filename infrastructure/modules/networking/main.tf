@@ -21,7 +21,7 @@ resource "aws_subnet" "public_subnet1" {
 
 resource "aws_subnet" "public_subnet2" {
   vpc_id     = aws_vpc.smpip_vpc.id
-  availability_zone = "eu-west-1c"
+  availability_zone = "eu-west-1b"
   cidr_block = "10.0.2.0/24"
 
   tags = {
