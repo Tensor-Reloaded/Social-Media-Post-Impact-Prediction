@@ -19,7 +19,10 @@ import uaic.info.predictions_management_service.exceptions.EntityNotFoundExcepti
 
 import java.util.stream.LongStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -38,7 +41,7 @@ class UserServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         userService = new UserService(usersDao, twitterService);
-        LongStream.range(0, 1000)
+        LongStream.range(1, 1000)
                 .mapToObj(id -> {
                     User user = new User();
                     user.setId(id);
@@ -50,23 +53,19 @@ class UserServiceTest {
     @Test
     void testUserThatDoesntExistThrowsException() {
         final Long idThatDoesntExist = -1L;
-        assertThrows(EntityNotFoundException.class, () -> {
-            userService.checkIfExists(idThatDoesntExist);
-        });
+        assertThrows(EntityNotFoundException.class, () -> userService.checkIfExists(idThatDoesntExist));
     }
 
     @Test
     void testUserThatExistsDoesntThrowException() {
-        final Long idThatExists = 0L;
-        assertDoesNotThrow(() -> {
-            userService.checkIfExists(idThatExists);
-        });
+        final Long idThatExists = 1L;
+        assertDoesNotThrow(() -> userService.checkIfExists(idThatExists));
     }
 
     @Test
     void testDoesUserOwnsTweetHappyScenario() throws TwitterException {
-        final Long userId = 0L;
-        final Long tweetId = 0L;
+        final Long userId = 1L;
+        final Long tweetId = 1L;
         Status mockStatus = Mockito.mock(Status.class);
         twitter4j.User mockUser = Mockito.mock(twitter4j.User.class);
         Mockito.when(mockUser.getId()).thenReturn(userId);

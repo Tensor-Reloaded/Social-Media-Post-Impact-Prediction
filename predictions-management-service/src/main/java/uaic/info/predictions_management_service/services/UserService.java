@@ -3,9 +3,11 @@ package uaic.info.predictions_management_service.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 import uaic.info.predictions_management_service.daos.UsersDao;
+import uaic.info.predictions_management_service.entities.TweetPrediction;
+import uaic.info.predictions_management_service.entities.User;
 import uaic.info.predictions_management_service.exceptions.EntityNotFoundException;
+import uaic.info.predictions_management_service.exceptions.UserDoesNotOwnThePredictionException;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +20,16 @@ public class UserService {
         if (usersDao.findById(id).isEmpty()) {
             throw new EntityNotFoundException(USER_ENTITY, id);
         }
+    }
+
+    public void checkIfUserOwnsThePrediction(Long userId, Long predictionId) {
+        User user = usersDao.findById(userId).get();
+        for (TweetPrediction prediction : user.getPredictions()) {
+            if (prediction.getId().equals(predictionId)) {
+                return;
+            }
+        }
+        throw new UserDoesNotOwnThePredictionException(userId, predictionId);
     }
 
     public boolean doesUserOwnsTweet(Long userId, Long tweetId) throws TwitterException {

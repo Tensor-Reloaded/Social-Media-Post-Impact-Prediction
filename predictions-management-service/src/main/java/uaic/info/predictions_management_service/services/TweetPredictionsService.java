@@ -23,19 +23,20 @@ public class TweetPredictionsService {
         userService.checkIfExists(userId);
 
         return tweetPredictionsDao.findAll().stream()
-                .filter(prediction -> prediction.getUserId().equals(userId))
+                .filter(prediction -> prediction.getUser().getId().equals(userId))
                 .collect(Collectors.toList());
     }
 
-    public TweetPrediction getById(Long id) {
-        // check if the current user owns the tweet
+    public TweetPrediction getById(Long id, Long userId) {
+        userService.checkIfExists(userId);
+        userService.checkIfUserOwnsThePrediction(userId, id);
+
         return tweetPredictionsDao.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(TWEET_PREDICTION_ENTITY, id));
     }
 
-    public void removeById(Long id) {
-        TweetPrediction tweetPrediction = getById(id);
-        // check if the current user owns the tweet
+    public void removeById(Long id, Long userId) {
+        TweetPrediction tweetPrediction = getById(id, userId);
         tweetPredictionsDao.delete(tweetPrediction);
     }
 }

@@ -22,18 +22,18 @@ public class TweetPredictionsController {
     private final TweetPredictionsService tweetPredictionsService;
 
     @GetMapping
-    public List<TweetPrediction> getAll() {
-        return tweetPredictionsService.getAllByUserId(1L);
+    public List<TweetPrediction> getAll(Long userId) {
+        return tweetPredictionsService.getAllByUserId(userId);
     }
 
     @GetMapping("/{id}")
-    public TweetPrediction getById(@PathVariable @Valid @Min(0) Long id) {
-        return tweetPredictionsService.getById(id);
+    public TweetPrediction getById(@PathVariable @Valid @Min(0) Long id, Long userId) {
+        return tweetPredictionsService.getById(id, userId);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeById(@PathVariable @Valid @Min(0) Long id) {
-        tweetPredictionsService.removeById(id);
+    public void removeById(@PathVariable @Valid @Min(0) Long id, Long userId) {
+        tweetPredictionsService.removeById(id, userId);
     }
 }
