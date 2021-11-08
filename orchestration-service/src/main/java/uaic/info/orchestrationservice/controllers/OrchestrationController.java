@@ -1,8 +1,7 @@
 package uaic.info.orchestrationservice.controllers;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import uaic.info.orchestrationservice.entities.Tweet;
 import uaic.info.orchestrationservice.entities.TweetPrediction;
 import uaic.info.orchestrationservice.services.OrchestrationService;
 
@@ -10,13 +9,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrchestrationController {
-    final private OrchestrationService orchestrationService;
+    private final OrchestrationService orchestrationService;
 
     @GetMapping("/authorize")
     public void authorize() {
-
     }
 
     @GetMapping("/prediction")
