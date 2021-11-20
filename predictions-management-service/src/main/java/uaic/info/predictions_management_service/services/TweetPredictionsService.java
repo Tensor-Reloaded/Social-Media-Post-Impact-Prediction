@@ -1,14 +1,14 @@
 package uaic.info.predictions_management_service.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uaic.info.predictions_management_service.repositories.TweetPredictionsRepository;
 import uaic.info.predictions_management_service.entities.TweetPrediction;
 import uaic.info.predictions_management_service.exceptions.EntityNotFoundException;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
