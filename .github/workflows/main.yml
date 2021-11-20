@@ -1,0 +1,20 @@
+on: [push]
+jobs:
+ test-maven:
+    runs-on: ubuntu-latest
+    container: maven:3-openjdk-11
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd orchestration-service && mvn clean test
+  build-maven:
+    run-on: ubuntu-latest
+    steps:
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.2
+        with:
+          maven-version: 3.8.2
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - uses: actions/checkout@v2
+      - run: cd orchestration-service && mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=hello 
