@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import twitter4j.Status;
 import twitter4j.TwitterException;
-import uaic.info.predictions_management_service.daos.UsersRepository;
+import uaic.info.predictions_management_service.repositories.UsersRepository;
 import uaic.info.predictions_management_service.entities.User;
 import uaic.info.predictions_management_service.exceptions.EntityNotFoundException;
 

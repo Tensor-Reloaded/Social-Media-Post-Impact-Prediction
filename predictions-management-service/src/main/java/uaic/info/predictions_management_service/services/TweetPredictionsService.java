@@ -2,7 +2,7 @@ package uaic.info.predictions_management_service.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uaic.info.predictions_management_service.daos.TweetPredictionsRepository;
+import uaic.info.predictions_management_service.repositories.TweetPredictionsRepository;
 import uaic.info.predictions_management_service.entities.TweetPrediction;
 import uaic.info.predictions_management_service.exceptions.EntityNotFoundException;
 
