@@ -16,13 +16,16 @@ terraform {
 
 locals {
     services = toset([
-        "application-orchestration-service",
+        "orchestration-service",
+        "account-management-service",
         "ui-core-service"
     ])
+    region = "eu-west-3"
 }
 
 module "networking" {
   source = "../modules/networking"
+  region = local.region
 }
 
 module "ecr" {
@@ -32,13 +35,14 @@ module "ecr" {
 
 module "ecs" {
   source           = "../modules/ecs"
+  region 	   = local.region
   vpc_id           = module.networking.vpc_id
-  public_subnet_ids = module.networking.public_subnet_ids
+  public_subnet_ids= module.networking.public_subnet_ids
   subnet_id        = module.networking.services_subnet_id
   allowed_cidr     = module.networking.services_cidr
-  desired_capacity = 1
-  min_size         = 1
-  max_size         = 1
+  desired_capacity = 3
+  min_size         = 2
+  max_size         = 3
   service_names    = local.services
   repositories     = module.ecr.repositories
   instance_type    = "t2.micro"
@@ -46,4 +50,5 @@ module "ecs" {
 
 module "rds" {
   source = "../modules/rds"
+  region = local.region
 }

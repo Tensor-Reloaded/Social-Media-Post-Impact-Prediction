@@ -1,6 +1,8 @@
 resource "aws_vpc" "smpip_vpc" {
   cidr_block       = "10.0.0.0/16"
   instance_tenancy = "default"
+  enable_dns_support = true
+  enable_dns_hostnames = true
 
   tags = {
     Name = "smpip_vpc"
@@ -11,7 +13,7 @@ resource "aws_vpc" "smpip_vpc" {
 
 resource "aws_subnet" "public_subnet1" {
   vpc_id     = aws_vpc.smpip_vpc.id
-  availability_zone = "eu-west-1a"
+  availability_zone = "${var.region}a"
   cidr_block = "10.0.1.0/24"
 
   tags = {
@@ -21,7 +23,7 @@ resource "aws_subnet" "public_subnet1" {
 
 resource "aws_subnet" "public_subnet2" {
   vpc_id     = aws_vpc.smpip_vpc.id
-  availability_zone = "eu-west-1b"
+  availability_zone = "${var.region}c"
   cidr_block = "10.0.2.0/24"
 
   tags = {
@@ -31,6 +33,7 @@ resource "aws_subnet" "public_subnet2" {
 
 resource "aws_subnet" "services_subnet" {
   vpc_id     = aws_vpc.smpip_vpc.id
+  availability_zone = "${var.region}c"
   cidr_block = "10.0.3.0/24"
 
   tags = {

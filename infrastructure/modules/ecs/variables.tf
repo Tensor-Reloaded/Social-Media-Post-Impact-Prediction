@@ -2,6 +2,8 @@ variable "cluster_name" {
     default = "smpip-cluster"
 }
 
+variable "region" {}
+
 variable "vpc_id" {}
 
 variable "subnet_id" {}

@@ -1,0 +1,32 @@
+name: Python build
+
+on:
+  workflow_call:
+    inputs:
+      service_dir:
+        description: 'Path of service directory containing a valid npmjs project'
+        required: true
+        type: string
+      service_repository_url:
+        description: 'ECR url'
+        required: true
+        type: string
+      artifact_name:
+        description: 'Artifact name'
+        required: true
+        type: string
+jobs:
+ build:
+   runs-on: ubuntu-latest
+   steps:
+     - name: Set up Docker Buildx
+       id: buildx
+       uses: docker/setup-buildx-action@v1
+     - uses: actions/checkout@v2
+     - run: cd ${{inputs.service_dir}} && docker build -t ${{inputs.service_repository_url}} .
+     - run: docker save ${{inputs.service_repository_url}} > image.tar
+     - name: Upload artifact
+       uses: actions/upload-artifact@v2
+       with:
+         name: ${{inputs.artifact_name}}
+         path: image.tar
