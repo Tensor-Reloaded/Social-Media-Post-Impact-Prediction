@@ -11,6 +11,16 @@ data "aws_ami" "ecs_ami" {
   }
 }
 
+/*
+ * Creattcloudwatch policy
+ */
+
+resource "aws_iam_role_policy" "cloudwatch_policy" {
+  name = "ECS-CloudWatchLogs"
+  role  = aws_iam_role.ecsInstanceRole.id
+  policy = var.cloudWatchPolicy
+}
+
 
 /*
  * Create ECS IAM Instance Role and Policy
@@ -186,6 +196,28 @@ variable "ecsServiceRolePolicy" {
       "Resource": "*"
     }
   ]
+}
+EOF
+}
+
+variable "cloudWatchPolicy" {
+  default = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:*:*"
+            ]
+        }
+    ]
 }
 EOF
 }

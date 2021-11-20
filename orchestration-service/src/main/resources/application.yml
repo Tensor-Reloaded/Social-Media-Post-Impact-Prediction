@@ -1,3 +1,2 @@
-prediction:
-  ribbon:
-    listOfServers: http://localhost:8081
+server:
+  port: 80
