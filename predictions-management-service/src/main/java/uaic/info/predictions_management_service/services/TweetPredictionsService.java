@@ -1,14 +1,14 @@
 package uaic.info.predictions_management_service.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uaic.info.predictions_management_service.daos.TweetPredictionsDao;
 import uaic.info.predictions_management_service.entities.TweetPrediction;
 import uaic.info.predictions_management_service.exceptions.EntityNotFoundException;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -16,27 +16,18 @@ import java.util.stream.Collectors;
 public class TweetPredictionsService {
     private static final String TWEET_PREDICTION_ENTITY = "TweetPrediction";
     private final TweetPredictionsDao tweetPredictionsDao;
-    private final UserService userService;
-    private final TwitterService twitterService; // facade for Twitter API
 
-    public List<TweetPrediction> getAllByUserId(Long userId) {
-        userService.checkIfExists(userId);
-
-        return tweetPredictionsDao.findAll().stream()
-                .filter(prediction -> prediction.getUser().getId().equals(userId))
-                .collect(Collectors.toList());
+    public Page<TweetPrediction> getAll(Pageable pageable) {
+        return tweetPredictionsDao.findAll(pageable);
     }
 
-    public TweetPrediction getById(Long id, Long userId) {
-        userService.checkIfExists(userId);
-        userService.checkIfUserOwnsThePrediction(userId, id);
-
+    public TweetPrediction getById(Long id) {
         return tweetPredictionsDao.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(TWEET_PREDICTION_ENTITY, id));
     }
 
-    public void removeById(Long id, Long userId) {
-        TweetPrediction tweetPrediction = getById(id, userId);
+    public void removeById(Long id) {
+        TweetPrediction tweetPrediction = getById(id);
         tweetPredictionsDao.delete(tweetPrediction);
     }
 }
