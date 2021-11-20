@@ -31,6 +31,17 @@ public class ControllerAdvisor {
         return body;
     }
 
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UserDoesNotOwnThePredictionException.class)
+    public Map<String, Object> handleUserDoesNotOwnThePredictionException(UserDoesNotOwnThePredictionException exception) {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP_KEY, LocalDateTime.now());
+        body.put(MESSAGE_KEY, exception.getMessage());
+
+        return body;
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {

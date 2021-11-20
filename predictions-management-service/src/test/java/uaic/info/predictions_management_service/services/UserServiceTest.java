@@ -13,9 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import twitter4j.Status;
 import twitter4j.TwitterException;
-import uaic.info.predictions_management_service.daos.UsersDao;
 import uaic.info.predictions_management_service.entities.User;
 import uaic.info.predictions_management_service.exceptions.EntityNotFoundException;
+import uaic.info.predictions_management_service.repositories.UsersRepository;
 
 import java.util.stream.LongStream;
 
@@ -33,21 +33,21 @@ class UserServiceTest {
     private TwitterService twitterService;
 
     @Autowired
-    private UsersDao usersDao;
+    private UsersRepository usersRepository;
 
     private UserService userService;
 
     @BeforeAll
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserService(usersDao, twitterService);
+        userService = new UserService(usersRepository, twitterService);
         LongStream.range(1, 1000)
                 .mapToObj(id -> {
                     User user = new User();
                     user.setId(id);
                     return user;
                 })
-                .forEach(usersDao::save);
+                .forEach(usersRepository::save);
     }
 
     @Test
