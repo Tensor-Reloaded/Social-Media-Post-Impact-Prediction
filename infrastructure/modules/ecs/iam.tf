@@ -237,6 +237,7 @@ variable "ecsServiceParamRolePolicy" {
         {
             "Effect": "Allow",
             "Action": [
+               "autoscaling:DescribeAutoScalingInstances",
                "ssm:PutParameter",
                "ssm:GetParameter",
                "ssm:GetParameters",
