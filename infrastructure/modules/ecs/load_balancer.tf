@@ -46,7 +46,7 @@ resource "aws_lb_listener_rule" "backend_forward" {
 
     condition {
 	path_pattern {
- 	    values = ["/api/v1", "/api/v1/"]
+ 	    values = ["/api/v1", "/api/v1/*"]
         }
     }
 }

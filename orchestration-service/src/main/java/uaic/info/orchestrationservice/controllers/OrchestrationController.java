@@ -1,6 +1,7 @@
 package uaic.info.orchestrationservice.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import uaic.info.orchestrationservice.entities.TweetPrediction;
 import uaic.info.orchestrationservice.services.OrchestrationService;
@@ -12,6 +13,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrchestrationController {
     private final OrchestrationService orchestrationService;
+
+    @Value("${message}")
+    private String message;
+
+    @GetMapping("/greet")
+    public String greet() {
+        return message;
+    }
+
 
     @GetMapping("/authorize")
     public void authorize() {
