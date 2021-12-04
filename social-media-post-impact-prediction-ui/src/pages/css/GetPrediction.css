@@ -1,0 +1,21 @@
+form {
+  text-align: center;
+}
+
+form > * {
+  display: block;
+  margin-bottom: 20px !important;
+}
+
+form input[type="file"] {
+  display: none;
+}
+
+img {
+  max-width: 300px;
+  max-height: 300px;
+}
+
+#number-of-likes {
+  margin-bottom: 20px;
+}
