@@ -4,7 +4,7 @@ jobs:
     uses: csum112/oha/.github/workflows/maven_build.yml@pipelines
     with:
       service_dir: orchestration-service
-      service_repository_url: 550479832263.dkr.ecr.eu-west-3.amazonaws.com/orchestration-service-bar
+      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/orchestration-service-bar
       artifact_name: orchestration-service-image
   call-deploy-build:
     needs: call-maven-build
@@ -14,7 +14,7 @@ jobs:
       service_name: orchestration-service
       cluster_name: smpip-cluster
     secrets:
-      service_repository_url: 550479832263.dkr.ecr.eu-west-3.amazonaws.com/orchestration-service-bar
+      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/orchestration-service-bar
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
