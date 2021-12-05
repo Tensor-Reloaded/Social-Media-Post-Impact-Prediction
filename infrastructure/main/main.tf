@@ -18,6 +18,7 @@ locals {
   services = toset([
     "orchestration-service",
     "account-management-service",
+    "prediction-management-service",
     "ui-core-service"
   ])
   region = "eu-west-1"
