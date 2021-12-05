@@ -50,3 +50,19 @@ resource "aws_lb_listener_rule" "backend_forward" {
         }
     }
 }
+
+
+data "aws_route53_zone" "primary" {
+        name = "salpisi.cf"
+}
+
+resource "aws_route53_record" "primary" {
+    zone_id = data.aws_route53_zone.primary.id
+    name = data.aws_route53_zone.primary.name
+    type = "A"
+    alias {
+        name = aws_lb.smpip_lb.dns_name
+        zone_id = aws_lb.smpip_lb.zone_id
+        evaluate_target_health = true
+    } 
+}
