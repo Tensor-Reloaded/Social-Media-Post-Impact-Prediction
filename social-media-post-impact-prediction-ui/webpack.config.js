@@ -36,5 +36,10 @@ module.exports = {
   ],
   resolve: {
     extensions: [".tsx", ".js"],
-  }
+  },
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
+  },
 };
