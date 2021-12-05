@@ -19,7 +19,8 @@ locals {
     "orchestration-service",
     "account-management-service",
     "prediction-management-service",
-    "ui-core-service"
+    "ui-core-service",
+    "prediction-service"
   ])
   region = "eu-west-1"
 }
@@ -42,11 +43,11 @@ module "ecs" {
   subnet_id         = module.networking.services_subnet_id
   allowed_cidr      = module.networking.services_cidr
   desired_capacity  = 3
-  min_size          = 2
+  min_size          = 3
   max_size          = 3
   service_names     = local.services
   repositories      = module.ecr.repositories
-  instance_type     = "t2.micro"
+  instance_type     = "t3a.small"
 }
 
 module "rds" {
