@@ -51,4 +51,7 @@ module "ecs" {
 module "rds" {
   source = "../modules/rds"
   region = local.region
+  vpc_id = module.networking.vpc_id
+  db_subnet_ids = module.networking.db_subnet_ids
+  allowed_sg_ids = module.ecs.sgs
 }

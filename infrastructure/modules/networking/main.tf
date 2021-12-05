@@ -41,14 +41,24 @@ resource "aws_subnet" "services_subnet" {
   }
 }
 
-resource "aws_subnet" "db_subnet" {
+resource "aws_subnet" "db_subnet1" {
   vpc_id     = aws_vpc.smpip_vpc.id
   cidr_block = "10.0.4.0/24"
 
   tags = {
-    Name = "smpip_db_subnet"
+    Name = "smpip_db_subnet1"
   }
 }
+
+resource "aws_subnet" "db_subnet2" {
+  vpc_id     = aws_vpc.smpip_vpc.id
+  cidr_block = "10.0.5.0/24"
+
+  tags = {
+    Name = "smpip_db_subnet2"
+  }
+}
+
 
 # END REGION SUBNETS
 
@@ -126,8 +136,13 @@ resource "aws_route_table_association" "services_route_table_association" {
   route_table_id = aws_route_table.private_route_table.id
 }
 
-resource "aws_route_table_association" "db_route_table_association" {
-  subnet_id      = aws_subnet.db_subnet.id
+resource "aws_route_table_association" "db_route_table_association1" {
+  subnet_id      = aws_subnet.db_subnet1.id
+  route_table_id = aws_route_table.private_route_table.id
+}
+
+resource "aws_route_table_association" "db_route_table_association2" {
+  subnet_id      = aws_subnet.db_subnet2.id
   route_table_id = aws_route_table.private_route_table.id
 }
 # END REGION PRIVATE SUBNET CONFIGURATION

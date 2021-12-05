@@ -15,3 +15,14 @@ resource "aws_service_discovery_service" "svc_disc" {
     }
   }
 }
+
+locals {
+    eureka_endpoint = "http://${aws_service_discovery_service.svc_disc.name}.${aws_service_discovery_private_dns_namespace.dns_namespace.name}/eureka"
+}
+
+resource "aws_ssm_parameter" "pms_jdbc_url" {
+  for_each    = toset(["prediction-management", "account-management"])
+  name        = "/config/${each.key}/eureka.client.serviceUrl.defaultZone"
+  type        = "SecureString"
+  value       = local.eureka_endpoint
+}
