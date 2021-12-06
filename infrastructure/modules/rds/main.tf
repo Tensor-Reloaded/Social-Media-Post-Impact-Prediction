@@ -35,13 +35,14 @@ resource "random_password" "ams_password" {
 resource "random_string" "ams_user" {
   length           = 8
   special          = false
+  number = false
 }
 
 resource "aws_rds_cluster" "ams_postgresql" {
   cluster_identifier      = "smpip-ams-aurora-cluster"
   engine                  = "aurora-postgresql"
   engine_mode             = "serverless"
-  availability_zones      = ["${var.region}c", "${var.region}b"]
+  availability_zones      = ["${var.region}a", "${var.region}b"]
   database_name           = "smpip"
   master_username         = random_string.ams_user.result
   master_password         = random_password.ams_password.result
@@ -86,13 +87,14 @@ resource "random_password" "pms_password" {
 resource "random_string" "pms_user" {
   length           = 8
   special          = false
+  number           = false
 }
 
 resource "aws_rds_cluster" "pms_postgresql" {
   cluster_identifier      = "smpip-pms-aurora-cluster"
   engine                  = "aurora-postgresql"
   engine_mode             = "serverless"
-  availability_zones      = ["${var.region}c", "${var.region}b"]
+  availability_zones      = ["${var.region}a", "${var.region}b"]
   database_name           = "smpip"
   master_username         = random_string.pms_user.result
   master_password         = random_password.pms_password.result
