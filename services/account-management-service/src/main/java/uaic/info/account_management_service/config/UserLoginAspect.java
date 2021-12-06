@@ -14,19 +14,19 @@ import org.springframework.context.annotation.Configuration;
 public class UserLoginAspect {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Before(value = "execution(* uaic.info.account_management_service.controllers.GetTwitterTokenController.getToken(..))")
+    @Before(value = "execution(* uaic.info.account_management_service.controllers.TwitterLoginController.getRequestToken(..))")
     public void beforeLogin(JoinPoint joinPoint) {
         logger.info("Executing {}", joinPoint.getSignature());
         logger.info("Login initialized");
     }
 
-    @AfterReturning(value = "execution(* uaic.info.account_management_service.controllers.TwitterCallbackController.twitterCallback(..))")
+    @AfterReturning(value = "execution(* uaic.info.account_management_service.controllers.TwitterLoginController.getAccessToken(..))")
     public void afterLogin(JoinPoint joinPoint) {
         logger.info("Executing {}", joinPoint.getSignature());
         logger.info("Login finalized");
     }
 
-    @AfterThrowing(value = "execution(* uaic.info.account_management_service.controllers.TwitterCallbackController.twitterCallback(..))")
+    @AfterThrowing(value = "execution(* uaic.info.account_management_service.controllers.TwitterLoginController.getAccessToken(..))")
     public void afterLoginThrowing(JoinPoint joinPoint) {
         logger.info("{} threw exception", joinPoint);
     }
