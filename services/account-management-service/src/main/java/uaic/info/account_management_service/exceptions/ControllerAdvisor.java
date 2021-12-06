@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import twitter4j.TwitterException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,4 +50,23 @@ public class ControllerAdvisor {
         return body;
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(TwitterException.class)
+    public Map<String, Object> handleTwitterException(TwitterException exception) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP_KEY, LocalDate.now());
+        body.put(MESSAGE_KEY, exception.getMessage());
+
+        return body;
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InvalidTwitterRequestToken.class)
+    public Map<String, Object> handleInvalidTwitterRequestToken(InvalidTwitterRequestToken exception) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP_KEY, LocalDate.now());
+        body.put(MESSAGE_KEY, exception.getMessage());
+
+        return body;
+    }
 }

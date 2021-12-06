@@ -1,22 +1,27 @@
 package uaic.info.account_management_service.services;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
+import javax.annotation.PostConstruct;
+
 @Service
 public class TwitterService {
 
-    public Twitter getTwitter() {
-        Twitter twitter = null;
+    @Value("${consumerKey}")
+    private String consumerKey;
 
-        //set the consumer key and secret for our app
-        String consumerKey = "consumerKey";
-        String consumerSecret = "consumerSecret";
+    @Value("${consumerSecret}")
+    private String consumerSecret;
 
-        //build the configuration
+    private Twitter twitter;
+
+    @PostConstruct
+    public void init(){
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setOAuthConsumerKey(consumerKey);
         builder.setOAuthConsumerSecret(consumerSecret);
@@ -25,7 +30,9 @@ public class TwitterService {
         //instantiate the Twitter object with the configuration
         TwitterFactory factory = new TwitterFactory(configuration);
         twitter = factory.getInstance();
+    }
 
+    public Twitter getTwitter() {
         return twitter;
     }
 }
