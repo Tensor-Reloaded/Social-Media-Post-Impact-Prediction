@@ -34,7 +34,7 @@ public class TwitterLoginController {
     @Value("${front-end.domain}")
     private String callbackUrl;
 
-    @PostMapping("twitter/oauth/request_token")
+    @PostMapping("request_token")
     public TwitterRequestToken getRequestToken() throws TwitterException {
         Twitter twitter = twitterService.getTwitter();
         RequestToken requestToken = twitter.getOAuthRequestToken(callbackUrl);
@@ -43,7 +43,7 @@ public class TwitterLoginController {
         return new TwitterRequestToken(requestToken.getToken());
     }
 
-    @PostMapping("twitter/oauth/access_token")
+    @PostMapping("access_token")
     public TwitterAccessToken getAccessToken(@RequestBody GetAccessTokenRequestBody requestBody) throws TwitterException, InvalidTwitterRequestToken {
         if (!requestBody.getOauthToken().equals(currentRequestToken)) throw new InvalidTwitterRequestToken();
         Twitter twitter = twitterService.getTwitter();
