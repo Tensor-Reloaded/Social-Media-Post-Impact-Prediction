@@ -21,7 +21,7 @@ locals {
 }
 
 resource "aws_ssm_parameter" "pms_jdbc_url" {
-  for_each    = toset(["prediction-management", "account-management"])
+  for_each    = toset(["prediction-management", "account-management", "prediction"])
   name        = "/config/${each.key}/eureka.client.serviceUrl.defaultZone"
   type        = "SecureString"
   value       = local.eureka_endpoint
