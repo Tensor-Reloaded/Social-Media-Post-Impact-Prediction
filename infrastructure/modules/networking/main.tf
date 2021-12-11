@@ -43,6 +43,7 @@ resource "aws_subnet" "services_subnet" {
 
 resource "aws_subnet" "db_subnet1" {
   vpc_id     = aws_vpc.smpip_vpc.id
+  availability_zone = "${var.region}a"
   cidr_block = "10.0.4.0/24"
 
   tags = {
@@ -53,6 +54,7 @@ resource "aws_subnet" "db_subnet1" {
 resource "aws_subnet" "db_subnet2" {
   vpc_id     = aws_vpc.smpip_vpc.id
   cidr_block = "10.0.5.0/24"
+  availability_zone = "${var.region}b"
 
   tags = {
     Name = "smpip_db_subnet2"
