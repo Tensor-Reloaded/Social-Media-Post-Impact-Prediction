@@ -6,7 +6,8 @@ resource "aws_cloudwatch_log_group" "yada" {
 resource "aws_ecs_task_definition" "services" {
     for_each = var.service_names
     family = "${each.key}-family"
-    network_mode = contains(["ui-core-service", "orchestration-service"], each.key) ? "awsvpc" : "bridge"
+#    network_mode = contains(["ui-core-service", "orchestration-service"], each.key) ? "awsvpc" : "bridge"
+    network_mode = "awsvpc"
     container_definitions = jsonencode([
         {
           name      = each.key

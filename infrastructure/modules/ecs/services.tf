@@ -4,6 +4,11 @@ resource "aws_ecs_service" "services" {
     cluster  = aws_ecs_cluster.smpip_cluster.id
     task_definition = aws_ecs_task_definition.services[each.key].arn
     desired_count = 1
+
+    network_configuration {
+        subnets = [var.subnet_id]
+        security_groups = [aws_security_group.default_sg.id]
+    }
 }
 
 resource "aws_ecs_service" "ui_core_service" {
