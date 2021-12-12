@@ -3,15 +3,6 @@ spring:
     name: prediction-management
 server:
   port: 80
-cloud:
-  aws:
-    region:
-      static: eu-west-1
-    stack:
-      auto: false
-aws:
-  paramstore:
-    enabled: true
-    prefix: /config
-    default-context: application
-    profile-separator: _
+eureka:
+    instance:
+          prefer-ip-address: true

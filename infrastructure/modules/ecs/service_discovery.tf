@@ -1,5 +1,5 @@
 resource "aws_service_discovery_private_dns_namespace" "dns_namespace" {
-  name        = "orchestration-service.local"
+  name        = "eureka.local"
   vpc         = var.vpc_id
 }
 
@@ -21,7 +21,7 @@ locals {
 }
 
 resource "aws_ssm_parameter" "pms_jdbc_url" {
-  for_each    = toset(["prediction-management", "account-management", "prediction"])
+  for_each    = toset(["orchestration", "prediction-management", "account-management", "prediction"])
   name        = "/config/${each.key}/eureka.client.serviceUrl.defaultZone"
   type        = "SecureString"
   value       = local.eureka_endpoint

@@ -1,19 +1,8 @@
 spring:
   application:
     name: orchestration
-#  config:
-#    import: "aws-paramstore:"
 server:
   port: 80
-cloud:
-  aws:
-    region:
-      static: eu-west-1
-    stack:
-      auto: false
-aws:
-  paramstore:
-    enabled: true
-    prefix: /config
-    default-context: application
-    profile-separator: _
+eureka:
+  instance:
+    prefer-ip-address: true

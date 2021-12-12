@@ -1,7 +1,7 @@
 package uaic.info.orchestrationservice.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.web.bind.annotation.*;
 import uaic.info.orchestrationservice.dto.GetAccessTokenRequestBody;
 import uaic.info.orchestrationservice.dto.TwitterAccessToken;
@@ -46,4 +46,10 @@ public class OrchestrationController {
     public TweetPrediction createPrediction() {
         return null;
     }
+
+    @GetMapping("services/{svc}")
+    public List<ServiceInstance> getInstances(@PathVariable("svc") String serviceName) {
+        return orchestrationService.getInstances(serviceName);
+    }
+
 }

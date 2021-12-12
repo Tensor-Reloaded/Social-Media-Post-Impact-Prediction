@@ -1,5 +1,5 @@
 resource "aws_ecs_service" "services" {
-    for_each = toset([ for k in var.service_names: k if !contains(["ui-core-service", "orchestration-service"], k)])
+    for_each = toset([ for k in var.service_names: k if !contains(["ui-core-service", "orchestration-service", "eureka"], k)])
     name = each.key
     cluster  = aws_ecs_cluster.smpip_cluster.id
     task_definition = aws_ecs_task_definition.services[each.key].arn
@@ -48,5 +48,21 @@ resource "aws_ecs_service" "orchestration_service" {
 
     service_registries {
 	registry_arn = aws_service_discovery_service.svc_disc.arn
+    }
+}
+
+resource "aws_ecs_service" "eureka" {
+    name = "eureka"
+    cluster  = aws_ecs_cluster.smpip_cluster.id
+    task_definition = aws_ecs_task_definition.services["eureka"].arn
+    desired_count = 1
+
+    network_configuration {
+        subnets = [var.subnet_id]
+        security_groups = [aws_security_group.default_sg.id]
+    }
+
+    service_registries {
+	    registry_arn = aws_service_discovery_service.svc_disc.arn
     }
 }
