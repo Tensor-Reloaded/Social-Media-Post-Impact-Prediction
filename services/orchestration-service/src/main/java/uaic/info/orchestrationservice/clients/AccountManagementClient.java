@@ -12,7 +12,7 @@ import uaic.info.orchestrationservice.entities.TweetMetaData;
 
 @FeignClient("account-management")
 public interface AccountManagementClient {
-    @RequestMapping(value = "/api/v1/request_token", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/request_token", method = RequestMethod.GET)
     TwitterRequestToken getRequestToken();
 
     @RequestMapping(value = "/api/v1/access_token", method = RequestMethod.POST)
