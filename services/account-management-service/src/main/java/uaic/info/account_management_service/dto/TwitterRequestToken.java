@@ -1,18 +1,20 @@
 package uaic.info.account_management_service.dto;
 
+import twitter4j.auth.RequestToken;
+
 public class TwitterRequestToken {
 
-    private String requestToken;
+    private RequestToken requestToken;
 
-    public TwitterRequestToken(String requestToken) {
+    public TwitterRequestToken(RequestToken requestToken) {
         this.requestToken = requestToken;
     }
 
-    public String getRequestToken() {
+    public RequestToken getRequestToken() {
         return requestToken;
     }
 
-    public void setRequestToken(String requestToken) {
+    public void setRequestToken(RequestToken requestToken) {
         this.requestToken = requestToken;
     }
 }

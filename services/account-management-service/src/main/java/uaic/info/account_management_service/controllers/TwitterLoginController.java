@@ -40,12 +40,12 @@ public class TwitterLoginController {
         RequestToken requestToken = twitter.getOAuthRequestToken(callbackUrl);
         currentRequestToken = requestToken.getToken();
 
-        return new TwitterRequestToken(requestToken.getToken());
+        return new TwitterRequestToken(requestToken);
     }
 
     @PostMapping("access_token")
     public TwitterAccessToken getAccessToken(@RequestBody GetAccessTokenRequestBody requestBody) throws TwitterException, InvalidTwitterRequestToken {
-        if (!requestBody.getOauthToken().equals(currentRequestToken)) throw new InvalidTwitterRequestToken();
+        if (requestBody.getOauthToken() == null || !requestBody.getOauthToken().getToken().equals(currentRequestToken)) throw new InvalidTwitterRequestToken();
         Twitter twitter = twitterService.getTwitter();
         AccessToken accessToken = twitter.getOAuthAccessToken(requestBody.getOauthToken(),
                 requestBody.getOauthVerifier());

@@ -1,20 +1,22 @@
 package uaic.info.account_management_service.dto;
 
+import twitter4j.auth.RequestToken;
+
 public class GetAccessTokenRequestBody {
-    private String oauthToken;
+    private RequestToken oauthToken;
 
     private String oauthVerifier;
 
-    public GetAccessTokenRequestBody(String oauthToken, String oauthVerifier) {
+    public GetAccessTokenRequestBody(RequestToken oauthToken, String oauthVerifier) {
         this.oauthToken = oauthToken;
         this.oauthVerifier = oauthVerifier;
     }
 
-    public String getOauthToken() {
+    public RequestToken getOauthToken() {
         return oauthToken;
     }
 
-    public void setOauthToken(String oauthToken) {
+    public void setOauthToken(RequestToken oauthToken) {
         this.oauthToken = oauthToken;
     }
 
