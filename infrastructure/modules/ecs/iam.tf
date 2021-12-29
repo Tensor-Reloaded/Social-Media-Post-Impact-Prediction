@@ -71,37 +71,37 @@ resource "aws_iam_instance_profile" "ecsInstanceProfile" {
   role = aws_iam_role.ecsInstanceRole.name
 }
 
-resource "aws_iam_user" "github_user" {
-    name = "smpip_github_user"
-    path = "/"
-    tags = {
-        "Name" = "smpip_github_user"
-    }
-}
-
-resource "aws_iam_access_key" "github_user_key" {
-    user = aws_iam_user.github_user.name
-}
-
-resource "aws_iam_user_policy" "github_user_policy" {
-  name = "smpip_github_user_policy"
-  user = aws_iam_user.github_user.name
-
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "ec2:Describe*",
-        ]
-        Effect   = "Allow"
-        Resource = "*"
-      },
-    ]
-  })
-}
+# resource "aws_iam_user" "github_user" {
+#     name = "smpip_github_user"
+#     path = "/"
+#     tags = {
+#         "Name" = "smpip_github_user"
+#     }
+# }
+# 
+# resource "aws_iam_access_key" "github_user_key" {
+#     user = aws_iam_user.github_user.name
+# }
+# 
+# resource "aws_iam_user_policy" "github_user_policy" {
+#   name = "smpip_github_user_policy"
+#   user = aws_iam_user.github_user.name
+# 
+#   # Terraform's "jsonencode" function converts a
+#   # Terraform expression result to valid JSON syntax.
+#   policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Action = [
+#           "ec2:Describe*",
+#         ]
+#         Effect   = "Allow"
+#         Resource = "*"
+#       },
+#     ]
+#   })
+# }
 
 /*
  * ECS related variables

@@ -4,7 +4,7 @@ jobs:
     uses: csum112/oha/.github/workflows/maven_build.yml@pipelines
     with:
       service_dir: services/orchestration-service
-      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/orchestration-service-bar
+      service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/orchestration-service-bar
       artifact_name: orchestration-service-image
   call-deploy-build-orchestration:
     needs: call-maven-build-orchestration
@@ -14,7 +14,7 @@ jobs:
       service_name: orchestration-service
       cluster_name: smpip-cluster
     secrets:
-      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/orchestration-service-bar
+      service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/orchestration-service-bar
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -22,7 +22,7 @@ jobs:
     uses: csum112/oha/.github/workflows/maven_build.yml@pipelines
     with:
       service_dir: services/account-management-service
-      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/account-management-service-bar
+      service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/account-management-service-bar
       artifact_name: account-management-service-image
   call-deploy-build-account-management:
     needs: call-maven-build-account-management
@@ -32,7 +32,7 @@ jobs:
       service_name: account-management-service
       cluster_name: smpip-cluster
     secrets:
-      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/account-management-service-bar
+      service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/account-management-service-bar
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -40,7 +40,7 @@ jobs:
     uses: csum112/oha/.github/workflows/maven_build.yml@pipelines
     with:
       service_dir: services/predictions-management-service
-      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/prediction-management-service-bar
+      service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/prediction-management-service-bar
       artifact_name: predictions-management-service-image
   call-deploy-build-predictions-management:
     needs: call-maven-build-predictions-management
@@ -50,7 +50,7 @@ jobs:
       service_name: prediction-management-service
       cluster_name: smpip-cluster
     secrets:
-      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/prediction-management-service-bar
+      service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/prediction-management-service-bar
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -58,7 +58,7 @@ jobs:
     uses: csum112/oha/.github/workflows/maven_build.yml@pipelines
     with:
       service_dir: services/eureka
-      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/eureka-bar
+      service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/eureka-bar
       artifact_name: eurerka-image
   call-deploy-build-eureka:
     needs: call-maven-build-eureka
@@ -68,7 +68,7 @@ jobs:
       service_name: eureka
       cluster_name: smpip-cluster
     secrets:
-      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/eureka-bar
+      service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/eureka-bar
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -76,7 +76,7 @@ jobs:
     uses: csum112/oha/.github/workflows/npm_build.yml@pipelines
     with:
       service_dir: social-media-post-impact-prediction-ui
-      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/ui-core-service-bar
+      service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/ui-core-service-bar
       artifact_name: ui-service-image
   call-npm-deploy:
     needs: call-npm-build
@@ -86,7 +86,7 @@ jobs:
       service_name: ui-core-service
       cluster_name: smpip-cluster
     secrets:
-      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/ui-core-service-bar
+      service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/ui-core-service-bar
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -94,7 +94,7 @@ jobs:
       uses: csum112/oha/.github/workflows/python_build.yml@pipelines
       with:
         service_dir: prediction
-        service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/prediction-service-bar
+        service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/prediction-service-bar
         artifact_name: prediction-service-image
   call-python-deploy:
     needs: call-python-build
@@ -104,7 +104,7 @@ jobs:
       service_name: prediction-service
       cluster_name: smpip-cluster
     secrets:
-      service_repository_url: 550479832263.dkr.ecr.eu-west-1.amazonaws.com/prediction-service-bar
+      service_repository_url: 366257853867.dkr.ecr.eu-west-1.amazonaws.com/prediction-service-bar
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
