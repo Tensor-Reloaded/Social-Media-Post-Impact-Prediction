@@ -4,6 +4,7 @@ package uaic.info.account_management_service.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.annotation.RequestScope;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
@@ -17,6 +18,7 @@ public class TwitterConfig {
     private String consumerSecret;
 
     @Bean
+    @RequestScope
     public Twitter init(){
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setOAuthConsumerKey(consumerKey);

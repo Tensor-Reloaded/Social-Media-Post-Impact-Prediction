@@ -1,6 +1,7 @@
 package uaic.info.account_management_service.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import twitter4j.Twitter;
@@ -9,9 +10,8 @@ import twitter4j.Twitter;
 @Service
 @RequiredArgsConstructor
 public class TwitterService {
-    private final Twitter twitter;
-
+    @Lookup
     public Twitter getTwitter() {
-        return twitter;
+        return null;
     }
 }
