@@ -5,11 +5,19 @@ server:
   port: 80
 eureka:
   instance:
+    preferIpAddress: true
     prefer-ip-address: true
     health-check-url-path: "/actuator/health"
+ribbon:
+  eager-load:
+    enabled: true
+  eureka:
+    enabled: true
+  ConnectTimeout: 5000
+  ReadTimeout: 120000 #2 minutes
 zuul:
   ignored-services: '*'
   routes:
     account-management:
-      path: "/api/v1/oauth/*"
+      path: "/api/v1/oauth/**"
       strip-prefix: false
