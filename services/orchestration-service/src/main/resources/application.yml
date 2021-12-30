@@ -6,7 +6,10 @@ server:
 eureka:
   instance:
     prefer-ip-address: true
+    health-check-url-path: "/actuator/health"
 zuul:
   ignored-services: '*'
   routes:
-    account-management: '/api/v1/oauth/*'
+    account-management:
+      path: "/api/v1/oauth/*"
+      strip-prefix: false

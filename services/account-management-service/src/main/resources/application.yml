@@ -2,7 +2,8 @@ spring:
   application:
     name: account-management
 server:
-  port: 8080
+  port: 80
 eureka:
   instance:
     prefer-ip-address: true
+    health-check-url-path: /actuator/health
