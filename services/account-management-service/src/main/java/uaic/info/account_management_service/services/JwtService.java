@@ -2,6 +2,7 @@ package uaic.info.account_management_service.services;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class JwtService {
     private final static SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
@@ -25,6 +27,7 @@ public class JwtService {
     private Long expInMinutes;
 
     public String generate(@NotNull Long twitterID) {
+        log.info("Generating Bearer token for twitter user " + twitterID);
         final Date now = new Date(System.currentTimeMillis());
         final Date expiration = Date.from(Instant.now().plus(expInMinutes, ChronoUnit.MINUTES));
         final byte[] keyBytes = DatatypeConverter.parseBase64Binary(secretKey);

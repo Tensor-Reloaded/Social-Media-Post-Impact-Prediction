@@ -1,6 +1,8 @@
 package uaic.info.account_management_service.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TwitterService {
@@ -23,24 +25,27 @@ public class TwitterService {
     private final JwtService jwtService;
     private final Map<String, RequestToken> requestTokenMap = new HashMap<>();
 
+    @Autowired
+    private Twitter twitter;
+
     @Value("${redirectURL}")
     private String applicationRedirectURL;
 
 
     public BearerToken exchangeForBearer(String requestTokenString, String verifier) throws TwitterException {
-        final Twitter twitter = getTwitter();
-        assert twitter != null;
+        log.info("Generating Bearer Token");
         final var requestToken = requestTokenMap.get(requestTokenString);
         final var accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
+        log.info("Successfully generated bearer token");
         return new BearerToken(jwtService.generate(accessToken.getUserId()));
     }
 
 
     public RedirectURL generateRedirectURL() throws TwitterException {
-        final Twitter twitter = getTwitter();
-        assert twitter != null;
+        log.info("Generating Redirect URL");
         final RequestToken requestToken = twitter.getOAuthRequestToken(applicationRedirectURL);
         requestTokenMap.put(requestToken.getToken(), requestToken);
+        log.info("Successfully generated " + requestToken.getAuthorizationURL());
         return new RedirectURL(requestToken.getAuthorizationURL());
     }
 
@@ -54,10 +59,5 @@ public class TwitterService {
             account.setTwitterUsername(twitterName);
             accountService.createNewAccount(account);
         }
-    }
-
-    @Lookup
-    private Twitter getTwitter() {
-        return null;
     }
 }

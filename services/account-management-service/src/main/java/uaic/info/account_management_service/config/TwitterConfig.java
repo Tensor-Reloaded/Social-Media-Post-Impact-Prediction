@@ -24,8 +24,6 @@ public class TwitterConfig {
         builder.setOAuthConsumerKey(consumerKey);
         builder.setOAuthConsumerSecret(consumerSecret);
         twitter4j.conf.Configuration configuration = builder.build();
-
-        //instantiate the Twitter object with the configuration
         TwitterFactory factory = new TwitterFactory(configuration);
         return factory.getInstance();
     }
