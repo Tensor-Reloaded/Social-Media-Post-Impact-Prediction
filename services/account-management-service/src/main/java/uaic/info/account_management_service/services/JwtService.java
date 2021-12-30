@@ -21,8 +21,6 @@ public class JwtService {
     private String secretKey;
     @Value("${issuer}")
     private String issuer;
-    @Value("${subject}")
-    private String subject;
     @Value("${expInMinutes}")
     private Long expInMinutes;
 
@@ -33,7 +31,7 @@ public class JwtService {
         final Key signingKey = new SecretKeySpec(keyBytes, SIGNATURE_ALGORITHM.getJcaName());
         return Jwts.builder()
                 .setIssuedAt(now)
-                .setSubject(subject)
+                .setSubject(twitterID.toString())
                 .setIssuer(issuer)
                 .setExpiration(expiration)
                 .setClaims(Map.of("twitterID", twitterID))

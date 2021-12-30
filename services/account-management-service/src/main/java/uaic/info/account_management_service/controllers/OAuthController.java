@@ -14,18 +14,18 @@ import uaic.info.account_management_service.dto.TokenExchangeRequest;
 import uaic.info.account_management_service.services.TwitterService;
 
 @RestController
-@RequestMapping("api/v1/oauth/")
+@RequestMapping("/api/v1/oauth")
 @RequiredArgsConstructor
 public class OAuthController {
 
     private final TwitterService twitterService;
 
-    @GetMapping("authorize")
+    @GetMapping("/authorize")
     public RedirectURL authorize() throws TwitterException {
         return twitterService.generateRedirectURL();
     }
 
-    @PostMapping("verify")
+    @PostMapping("/verify")
     public BearerToken verify(@RequestBody TokenExchangeRequest req) throws TwitterException {
         return twitterService.exchangeForBearer(req.getRequestToken(), req.getVerifier());
     }
