@@ -6,3 +6,7 @@ server:
 eureka:
   instance:
     prefer-ip-address: true
+zuul:
+  ignored-services: '*'
+  routes:
+    account-management: '/api/v1/oauth/*'

@@ -9,8 +9,8 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class AccountManagementServiceApplicationTests {
 
-    @Test
-    void contextLoads() {
-        Assertions.assertTrue(true);
-    }
+//    @Test
+//    void contextLoads() {
+//        Assertions.assertTrue(true);
+//    }
 }

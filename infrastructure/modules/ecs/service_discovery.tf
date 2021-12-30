@@ -17,7 +17,7 @@ resource "aws_service_discovery_service" "svc_disc" {
 }
 
 locals {
-    eureka_endpoint = "http://${aws_service_discovery_service.svc_disc.name}.${aws_service_discovery_private_dns_namespace.dns_namespace.name}/eureka"
+    eureka_endpoint = "http://${aws_service_discovery_service.svc_disc.name}.${aws_service_discovery_private_dns_namespace.dns_namespace.name}:80/eureka"
 }
 
 resource "aws_ssm_parameter" "pms_jdbc_url" {
