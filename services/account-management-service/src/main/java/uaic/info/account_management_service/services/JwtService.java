@@ -1,5 +1,6 @@
 package uaic.info.account_management_service.services;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +31,7 @@ public class JwtService {
         log.info("Generating Bearer token for twitter user " + twitterID);
         final Date now = new Date(System.currentTimeMillis());
         final Date expiration = Date.from(Instant.now().plus(expInMinutes, ChronoUnit.MINUTES));
-        final byte[] keyBytes = DatatypeConverter.parseBase64Binary(secretKey);
-        final Key signingKey = new SecretKeySpec(keyBytes, SIGNATURE_ALGORITHM.getJcaName());
+        final Key signingKey = getSigningKey();
         return Jwts.builder()
                 .setIssuedAt(now)
                 .setSubject(twitterID.toString())
@@ -40,5 +40,31 @@ public class JwtService {
                 .setClaims(Map.of("twitterID", twitterID))
                 .signWith(SIGNATURE_ALGORITHM, signingKey)
                 .compact();
+    }
+
+    private Key getSigningKey() {
+        final byte[] keyBytes = DatatypeConverter.parseBase64Binary(secretKey);
+        return new SecretKeySpec(keyBytes, SIGNATURE_ALGORITHM.getJcaName());
+    }
+
+    public boolean isValid(@NotNull String bearerToken) {
+        final Key signingKey = getSigningKey();
+        final Claims claims = Jwts.parser()
+                .setSigningKey(signingKey)
+                .parseClaimsJws(bearerToken)
+                .getBody();
+        final Long twitterID = claims.get("twitterID", Long.class);
+        final String subject = claims.getSubject();
+        return claims.getExpiration().before(Date.from(Instant.now())) &&
+                twitterID.toString().equals(subject);
+    }
+
+    public Long extractTwitterId(@NotNull String bearerToken) {
+        final Key signingKey = getSigningKey();
+        return Jwts.parser()
+                .setSigningKey(signingKey)
+                .parseClaimsJws(bearerToken)
+                .getBody()
+                .get("twitterID", Long.class);
     }
 }

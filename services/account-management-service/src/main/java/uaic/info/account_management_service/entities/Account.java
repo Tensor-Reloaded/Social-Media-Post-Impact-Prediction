@@ -11,20 +11,14 @@ import javax.validation.constraints.NotNull;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "accounts")
-@NamedQuery(name = "Account.findByTwitterId", query = "SELECT account FROM Account account WHERE account.twitterId = ?1")
 public class Account {
-
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name = "id")
+    @NotNull
     private Long id;
 
     @NotNull
-    @Column(name = "twitter_id")
-    private Long twitterId;
+    private String key;
 
-    @NotBlank
-    @Column(name = "twitter_username")
-    private String twitterUsername;
+    @NotNull
+    private String secret;
 }

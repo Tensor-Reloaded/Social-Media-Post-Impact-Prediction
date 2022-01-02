@@ -55,8 +55,7 @@ public class TwitterService {
         Optional<Account> queryResponse = accountService.getByTwitterId(twitterId);
         if (queryResponse.isEmpty()) {
             Account account = new Account();
-            account.setTwitterId(twitterId);
-            account.setTwitterUsername(twitterName);
+            account.setId(twitterId);
             accountService.createNewAccount(account);
         }
     }

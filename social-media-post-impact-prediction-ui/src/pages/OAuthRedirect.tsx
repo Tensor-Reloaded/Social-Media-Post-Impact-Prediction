@@ -5,24 +5,28 @@ import { exchangeForBearer, redirectErrorPage, useAuthorizationContext } from ".
 const TOKEN_KEY = "oauth_token"
 const VERIFIER_KEY = "oauth_verifier"
 
+const redirectHome = () => {window.location.href = "/"}
+
 export default function OAuthRedirect() {
 
     const { state, setBearer } = useAuthorizationContext();
 
     useEffect(() => {
-        console.log("asd")
-        const params = queryString.parse(window.location.search);
-        console.log(params)
-        if (TOKEN_KEY in params && VERIFIER_KEY in params) {
-            exchangeForBearer(params[TOKEN_KEY] as string, params[VERIFIER_KEY] as string)
-                .then(setBearer);
-        } else {
-            // redirectErrorPage();
+        console.log(state)
+        if (!state.isLoggedIn) {
+            const params = queryString.parse(window.location.search);
+            console.log(params)
+            if (TOKEN_KEY in params && VERIFIER_KEY in params) {
+                exchangeForBearer(params[TOKEN_KEY] as string, params[VERIFIER_KEY] as string)
+                    .then(setBearer)
+                    .then(redirectHome);
+            } else {
+                redirectErrorPage();
+            }
         }
     })
 
     return (
-        // <p>{state.bearer}, {state.isLoggedIn}</p>
-        <p>asd</p>
+        <h4>Loading...</h4>
     );
 }

@@ -30,6 +30,6 @@ public class AccountService {
     }
 
     public Optional<Account> getByTwitterId(Long twitterId) {
-        return accountRepository.findByTwitterId(twitterId);
+        return accountRepository.findById(twitterId);
     }
 }
