@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Helmet } from "react-helmet";
-import { signIn } from "../services/TwitterService";
+import { startOAuthFlow } from "../services/AuthorizationService"
 import "./css/Home.css";
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
           <h1>Social Media</h1>
           <h1 className="white-fill">Post Impact Prediction</h1>
         </div>
-        <Button variant="primary" onClick={() => signIn()}>
+        <Button variant="primary" onClick={startOAuthFlow}>
           SIGN IN WITH TWITTER
         </Button>
       </div>

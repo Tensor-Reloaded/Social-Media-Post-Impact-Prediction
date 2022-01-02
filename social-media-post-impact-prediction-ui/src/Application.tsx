@@ -7,24 +7,29 @@ import PredictionsManagement from "./pages/PredictionsManagement";
 import CustomNavbar from "./components/CustomNavbar";
 import LoginError from "./pages/LoginError";
 import { getPredictions } from "./services/PredictionService";
+import { AuthenticationProvider } from "./services/AuthorizationService";
+import OAuthRedirect from "./pages/OAuthRedirect";
 
 export default function Application() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/login-error" render={() => <LoginError />} />
-        <>
-          <CustomNavbar />
-          <Route path="/" exact render={() => <Home />} />
-          <Route path="/get-prediction" render={() => <GetPrediction />} />
-          <Route
-            path="/predictions-management"
-            render={() => (
-              <PredictionsManagement predictions={getPredictions()} />
-            )}
-        />
-        </>
-      </Switch>
-    </Router>
+    <AuthenticationProvider>
+      <Router>
+        <Switch>
+          <Route path="/login-error" render={() => <LoginError />} />
+          <>
+            <CustomNavbar />
+            <Route path="/" exact render={() => <Home />} />
+            <Route path="/get-prediction" render={() => <GetPrediction />} />
+            <Route
+              path="/predictions-management"
+              render={() => (
+                <PredictionsManagement predictions={getPredictions()} />
+              )}
+            />
+            <Route path="/oauth_redirect" render={() => <OAuthRedirect/>} />
+          </>
+        </Switch>
+      </Router>
+    </AuthenticationProvider>
   );
 }

@@ -1,9 +1,13 @@
 package uaic.info.account_management_service.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public final class TokenExchangeRequest {
-    private final String requestToken;
-    private final String verifier;
+    private String requestToken;
+    private String verifier;
 }
