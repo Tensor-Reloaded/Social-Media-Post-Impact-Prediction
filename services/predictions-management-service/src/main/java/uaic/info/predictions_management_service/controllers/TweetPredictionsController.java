@@ -1,29 +1,37 @@
 package uaic.info.predictions_management_service.controllers;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uaic.info.predictions_management_service.entities.TweetPrediction;
+import uaic.info.predictions_management_service.services.JwtService;
 import uaic.info.predictions_management_service.services.TweetPredictionsService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
+@Slf4j
 @RestController
-@RequestMapping("api/v1/predictions")
+@RequestMapping("/api/v1/predictions")
 @RequiredArgsConstructor
 public class TweetPredictionsController {
     private final TweetPredictionsService tweetPredictionsService;
+    private final JwtService jwtService;
 
     @GetMapping
-    public List<TweetPrediction> getAll(Long userId) {
-        return tweetPredictionsService.getAllByUserId(userId);
+    public List<TweetPrediction> getAll(@RequestHeader(name = "Authorization") String bearer) {
+        log.info(String.format("GET /api/v1/predictions with token %s", bearer));
+        if (jwtService.isValid(bearer)) {
+            log.info("The provided token is valid");
+            final Long twitterID = jwtService.extractTwitterId(bearer);
+            log.info(String.format("Received request from twitterID %s", twitterID.toString()));
+        }
+        else {
+            log.info("The token is invalid");
+        }
+        return List.of();
     }
 
     @GetMapping("/{id}")

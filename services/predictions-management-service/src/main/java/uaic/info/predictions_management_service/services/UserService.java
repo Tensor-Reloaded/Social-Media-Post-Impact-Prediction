@@ -2,7 +2,6 @@ package uaic.info.predictions_management_service.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import twitter4j.TwitterException;
 import uaic.info.predictions_management_service.repositories.UsersRepository;
 import uaic.info.predictions_management_service.entities.TweetPrediction;
 import uaic.info.predictions_management_service.entities.User;
@@ -32,11 +31,11 @@ public class UserService {
         throw new UserDoesNotOwnThePredictionException(userId, predictionId);
     }
 
-    public boolean doesUserOwnsTweet(Long userId, Long tweetId) throws TwitterException {
-        checkIfExists(userId);
-        final Long tweetOwnerId = twitterService.getTweetById(tweetId)
-                .getUser()
-                .getId();
-        return tweetOwnerId.equals(userId);
-    }
+//    public boolean doesUserOwnsTweet(Long userId, Long tweetId) throws TwitterException {
+//        checkIfExists(userId);
+//        final Long tweetOwnerId = twitterService.getTweetById(tweetId)
+//                .getUser()
+//                .getId();
+//        return tweetOwnerId.equals(userId);
+//    }
 }

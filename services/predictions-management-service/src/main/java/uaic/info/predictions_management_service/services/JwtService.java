@@ -1,4 +1,4 @@
-package uaic.info.account_management_service.services;
+package uaic.info.predictions_management_service.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
