@@ -1,16 +1,18 @@
 locals {
-    svc_name = "account-management"
+    svc_names = toset(["account-management", "prediction-management"])
 }
 
 resource "aws_ssm_parameter" "issuer" {
-  name        = "/config/${local.svc_name}/issuer"
+  for_each    = local.svc_names
+  name        = "/config/${each.key}/issuer"
   type        = "SecureString"
   value       = "smpip"
 }
 
 
 resource "aws_ssm_parameter" "expiration" {
-  name        = "/config/${local.svc_name}/expInMinutes"
+  for_each    = local.svc_names
+  name        = "/config/${each.key}/expInMinutes"
   type        = "SecureString"
   value       = "30"
 }
@@ -21,7 +23,8 @@ resource "random_string" "private_key" {
 }
 
 resource "aws_ssm_parameter" "secret" {
-  name        = "/config/${local.svc_name}/bearerSecretKey"
+  for_each    = local.svc_names
+  name        = "/config/${each.key}/bearerSecretKey"
   type        = "SecureString"
   value       = random_string.private_key.result
 }
