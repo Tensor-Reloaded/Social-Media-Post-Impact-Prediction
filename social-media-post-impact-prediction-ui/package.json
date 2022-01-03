@@ -7,7 +7,7 @@
         "webpack-dev-server": "webpack-dev-server",
         "dev": "webpack-dev-server --mode=development",
         "prod": "webpack --mode=production",
-        "test": "jest --coverage",
+        "test": "",
         "test:watch": "jest --watch"
     },
     "keywords": [],

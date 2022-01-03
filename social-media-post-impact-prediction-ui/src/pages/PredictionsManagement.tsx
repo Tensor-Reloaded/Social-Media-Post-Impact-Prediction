@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Container, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { Prediction } from "../models/Prediction";
-import { removePredictionById } from "../services/PredictionService";
+import { getPredictions, removePredictionById } from "../services/PredictionService";
+import { useAuthorizationContext } from "../services/AuthorizationService"
 import "./css/PredictionsManagement.css";
 
 interface Props {
@@ -14,11 +15,21 @@ export default function PredictionsManagement(props: Props) {
     setPredictions(
       predictions.filter((prediction) => prediction.id !== predictionId)
     );
-    removePredictionById(predictionId);
+    removePredictionById(state.bearer, predictionId);
   }
+
+  const { state, setBearer } = useAuthorizationContext();
+
+  useEffect(() => {
+      if (isInitial) {
+        getPredictions(state.bearer).then(setPredictions);
+        setIsInitial(false);
+      }
+  })
 
   const title = "Manage predictions";
   const [predictions, setPredictions] = useState(props.predictions);
+  const [isInitial, setIsInitial] = useState(true);
 
   return (
     <>
@@ -41,9 +52,9 @@ export default function PredictionsManagement(props: Props) {
                   <Card.Title>
                     {prediction.predictedNumberOfLikes} likes
                   </Card.Title>
-                  <Card.Img variant="top" src={prediction.image} />
+                  <Card.Img variant="top" src={`data:image/jpeg;base64,${prediction.imageData}`} />
                   <Card.Body>
-                    <Card.Text>{prediction.description}</Card.Text>
+                    <Card.Text>{prediction.tweetText}</Card.Text>
                   </Card.Body>
                   <Button
                     size="sm"
