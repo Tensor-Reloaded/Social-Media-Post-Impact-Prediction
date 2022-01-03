@@ -23,14 +23,10 @@ public class TweetPredictionsController {
     @GetMapping
     public List<TweetPrediction> getAll(@RequestHeader(name = "Authorization") String bearer) {
         log.info(String.format("GET /api/v1/predictions with token %s", bearer));
-        if (jwtService.isValid(bearer)) {
-            log.info("The provided token is valid");
-            final Long twitterID = jwtService.extractTwitterId(bearer);
-            log.info(String.format("Received request from twitterID %s", twitterID.toString()));
-        }
-        else {
-            log.info("The token is invalid");
-        }
+        jwtService.ensureValid(bearer);
+        log.info("The provided token is valid");
+        final Long twitterID = jwtService.extractTwitterId(bearer);
+        log.info(String.format("Received request from twitterID %s", twitterID.toString()));
         return List.of();
     }
 
