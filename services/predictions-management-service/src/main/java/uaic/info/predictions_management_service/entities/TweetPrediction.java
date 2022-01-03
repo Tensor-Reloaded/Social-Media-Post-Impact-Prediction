@@ -17,6 +17,8 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Table(name = "predictions")
 public class TweetPrediction extends BaseEntity {
+    private String tweetText;
+    private byte[] imageData;
     private Integer predictedNumberOfLikes;
 
     @ManyToOne

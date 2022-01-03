@@ -8,12 +8,21 @@ import uaic.info.predictions_management_service.entities.User;
 import uaic.info.predictions_management_service.exceptions.EntityNotFoundException;
 import uaic.info.predictions_management_service.exceptions.UserDoesNotOwnThePredictionException;
 
+import java.util.LinkedList;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private static final String USER_ENTITY = "User";
     private final UsersRepository usersRepository;
-    private final TwitterService twitterService;
+
+
+    public void createIfNotExists(Long id) {
+        final User user = new User();
+        user.setId(id);
+        user.setPredictions(new LinkedList<>());
+        usersRepository.save(user);
+    }
 
     public void checkIfExists(Long id) {
         if (usersRepository.findById(id).isEmpty()) {
@@ -22,6 +31,7 @@ public class UserService {
     }
 
     public void checkIfUserOwnsThePrediction(Long userId, Long predictionId) {
+        checkIfExists(userId);
         User user = usersRepository.findById(userId).get();
         for (TweetPrediction prediction : user.getPredictions()) {
             if (prediction.getId().equals(predictionId)) {
@@ -30,12 +40,4 @@ public class UserService {
         }
         throw new UserDoesNotOwnThePredictionException(userId, predictionId);
     }
-
-//    public boolean doesUserOwnsTweet(Long userId, Long tweetId) throws TwitterException {
-//        checkIfExists(userId);
-//        final Long tweetOwnerId = twitterService.getTweetById(tweetId)
-//                .getUser()
-//                .getId();
-//        return tweetOwnerId.equals(userId);
-//    }
 }
