@@ -14,5 +14,5 @@ public class TweetPredictionDto {
     @NotNull private Long userId;
     @NotNull @Min(0) Integer predictedNumberOfLikes;
     @NotNull String tweetText;
-    @NotNull private byte[] imageData;
+    @NotNull private String imageData;
 }
