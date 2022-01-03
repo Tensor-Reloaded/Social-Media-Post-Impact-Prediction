@@ -16,6 +16,7 @@ ribbon:
   ConnectTimeout: 5000
   ReadTimeout: 120000 #2 minutes
 zuul:
+  sensitiveHeaders: Cookie,Set-Cookie
   ignored-services: '*'
   routes:
     account-management:
