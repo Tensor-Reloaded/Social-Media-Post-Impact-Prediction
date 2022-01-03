@@ -48,15 +48,26 @@ public class JwtService {
     }
 
     public boolean isValid(@NotNull String bearerToken) {
+        final Claims claims = obtainJWTClaims(bearerToken);
+        return checkTokenExpiration(claims) && checkTokenSubject(claims);
+    }
+
+    public boolean checkTokenExpiration(Claims claims) {
+        return claims.getExpiration().before(Date.from(Instant.now()));
+    }
+
+    public boolean checkTokenSubject(Claims claims) {
+        final Long twitterID = claims.get("twitterID", Long.class);
+        final String subject = claims.getSubject();
+        return twitterID.toString().equals(subject);
+    }
+
+    public Claims obtainJWTClaims(@NotNull String bearerToken) {
         final Key signingKey = getSigningKey();
-        final Claims claims = Jwts.parser()
+        return Jwts.parser()
                 .setSigningKey(signingKey)
                 .parseClaimsJws(bearerToken)
                 .getBody();
-        final Long twitterID = claims.get("twitterID", Long.class);
-        final String subject = claims.getSubject();
-        return claims.getExpiration().before(Date.from(Instant.now())) &&
-                twitterID.toString().equals(subject);
     }
 
     public Long extractTwitterId(@NotNull String bearerToken) {

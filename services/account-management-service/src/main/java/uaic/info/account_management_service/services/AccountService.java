@@ -7,7 +7,6 @@ import uaic.info.account_management_service.exceptions.EntityNotFoundException;
 import uaic.info.account_management_service.repositories.AccountRepository;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,11 +24,7 @@ public class AccountService {
             accountRepository.deleteById(id);
     }
 
-    public void createNewAccount(Account account) {
+    public void createUpdateAccount(Account account) {
         accountRepository.save(account);
-    }
-
-    public Optional<Account> getByTwitterId(Long twitterId) {
-        return accountRepository.findById(twitterId);
     }
 }

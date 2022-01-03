@@ -3,7 +3,6 @@ package uaic.info.account_management_service.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import twitter4j.Twitter;
@@ -12,10 +11,10 @@ import twitter4j.auth.RequestToken;
 import uaic.info.account_management_service.dto.BearerToken;
 import uaic.info.account_management_service.dto.RedirectURL;
 import uaic.info.account_management_service.entities.Account;
+import uaic.info.account_management_service.exceptions.EntityNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -36,6 +35,7 @@ public class TwitterService {
         log.info("Generating Bearer Token");
         final var requestToken = requestTokenMap.get(requestTokenString);
         final var accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
+        ensureUserExists(accessToken);
         log.info("Successfully generated bearer token");
         return new BearerToken(jwtService.generate(accessToken.getUserId()));
     }
@@ -51,12 +51,19 @@ public class TwitterService {
 
     private void ensureUserExists(twitter4j.auth.AccessToken accessToken) {
         Long twitterId = accessToken.getUserId();
-        String twitterName = accessToken.getScreenName();
-        Optional<Account> queryResponse = accountService.getByTwitterId(twitterId);
-        if (queryResponse.isEmpty()) {
+        try {
+            Account queryResponse = accountService.getById(twitterId);
+            queryResponse.setKey(accessToken.getToken());
+            queryResponse.setSecret(accessToken.getTokenSecret());
+            accountService.createUpdateAccount(queryResponse);
+            log.info("Updated account's access token and secret");
+        } catch (EntityNotFoundException exception) {
             Account account = new Account();
             account.setId(twitterId);
-            accountService.createNewAccount(account);
+            account.setKey(accessToken.getToken());
+            account.setSecret(accessToken.getTokenSecret());
+            accountService.createUpdateAccount(account);
+            log.info("Created account with access token and secret");
         }
     }
 }

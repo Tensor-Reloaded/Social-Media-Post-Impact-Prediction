@@ -69,4 +69,14 @@ public class ControllerAdvisor {
 
         return body;
     }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(InvalidBearerTokenException.class)
+    public Map<String, Object> handleInvalidBearerTokenException(InvalidBearerTokenException exception) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP_KEY, LocalDate.now());
+        body.put(MESSAGE_KEY, exception.getMessage());
+
+        return body;
+    }
 }
