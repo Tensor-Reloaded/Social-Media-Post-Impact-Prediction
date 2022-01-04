@@ -10,6 +10,7 @@ import uaic.info.predictions_management_service.exceptions.EntityNotFoundExcepti
 import uaic.info.predictions_management_service.repositories.UsersRepository;
 
 import javax.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,22 +26,23 @@ public class TweetPredictionsService {
     @Transactional
     public void createPrediction(TweetPredictionDto req) {
         userService.createIfNotExists(req.getUserId());
+        final User user = usersRepository.findById(req.getUserId()).get();
         final TweetPrediction tweetPrediction = new TweetPrediction();
         tweetPrediction.setTweetText(req.getTweetText());
-        tweetPrediction.setImageData(req.getImageData());
+        tweetPrediction.setImageData(req.getImageData().getBytes(StandardCharsets.UTF_8));
         tweetPrediction.setPredictedNumberOfLikes(req.getPredictedNumberOfLikes());
+        tweetPrediction.setUser(user);
         tweetPredictionsRepository.save(tweetPrediction);
-
-        final User user = usersRepository.findById(req.getUserId()).get();
         user.getPredictions().add(tweetPrediction);
         usersRepository.save(user);
     }
 
-    public List<TweetPrediction> getAllByUserId(Long userId) {
+    public List<TweetPredictionDto> getAllByUserId(Long userId) {
         userService.checkIfExists(userId);
 
         return tweetPredictionsRepository.findAll().stream()
-                .filter(prediction -> prediction.getUser().getId().equals(userId))
+                .filter(prediction -> prediction.getUser().getId().equals(userId)) //TODO: Null pointer here
+                .map(TweetPredictionDto::of)
                 .collect(Collectors.toList());
     }
 

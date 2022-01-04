@@ -21,7 +21,8 @@ export default function PredictionsManagement(props: Props) {
   const { state, setBearer } = useAuthorizationContext();
 
   useEffect(() => {
-      if (isInitial) {
+      if (isInitial && state.isLoggedIn) {
+        console.log(state.bearer)
         getPredictions(state.bearer).then(setPredictions);
         setIsInitial(false);
       }

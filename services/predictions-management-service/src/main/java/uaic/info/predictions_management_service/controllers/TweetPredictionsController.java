@@ -22,7 +22,7 @@ public class TweetPredictionsController {
     private final JwtService jwtService;
 
     @GetMapping
-    public List<TweetPrediction> getAll(@RequestHeader(name = "Authorization") String bearer) {
+    public List<TweetPredictionDto> getAll(@RequestHeader(name = "Authorization") String bearer) {
         final Long userId = extractId(bearer);
         log.info(String.format("Getting all prerdictions for user %s", userId));
         return tweetPredictionsService.getAllByUserId(userId);

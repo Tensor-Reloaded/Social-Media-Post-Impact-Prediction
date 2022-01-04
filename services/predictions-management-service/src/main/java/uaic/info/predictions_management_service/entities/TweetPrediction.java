@@ -5,10 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -16,12 +14,15 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "predictions")
-public class TweetPrediction extends BaseEntity {
+public class TweetPrediction {
+    @Id
+    @GeneratedValue
+    private Long id;
     private String tweetText;
-    private String imageData;
+    private byte[] imageData;
     private Integer predictedNumberOfLikes;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    @NotNull private User user;
 }
