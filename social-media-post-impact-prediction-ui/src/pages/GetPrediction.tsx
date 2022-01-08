@@ -4,11 +4,13 @@ import { useRef } from "react";
 import { ChangeEvent } from "react";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
 import { Helmet } from "react-helmet";
+import { useAuthorizationContext } from "../services/AuthorizationService";
 import { getPrediction } from "../services/PredictionService";
 import { postTweet } from "../services/TwitterService";
 import "./css/GetPrediction.css";
 
 export default function GetPrediction() {
+  const {state} = useAuthorizationContext();
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState(null);
@@ -77,9 +79,12 @@ export default function GetPrediction() {
           <Button
             variant="primary"
             onClick={() => {
-              const result = getPrediction({ description, image });
-              setPredictedNumberOfLikes(result);
-              setIsPredictedNumberOfLikesDisplayed(true);
+              getPrediction({ description, image }, state.bearer)
+                .then(result => {
+                  console.log(result);
+                  setPredictedNumberOfLikes(result);
+                  setIsPredictedNumberOfLikesDisplayed(true);
+                })
             }}
           >
             PREDICT

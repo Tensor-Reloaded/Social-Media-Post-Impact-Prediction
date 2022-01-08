@@ -6,6 +6,7 @@ from logging.config import dictConfig
 import os
 import re
 import requests
+import json
 
 
 dictConfig({
@@ -23,21 +24,21 @@ dictConfig({
     }
 })
 
-def before_all():
+def before_all(port):
     logging.info("Runing before all block")
     creds = fetch_credentials()
-    region = detect_region()
+    details = detect_connection_details()
     session = boto3.Session(
                 aws_access_key_id=creds.access_key,
                 aws_secret_access_key=creds.secret_key,
                 aws_session_token=creds.token,
-                region_name = region
+                region_name = details["region"]
             )
     logging.info("Fetching remote parameters")
     ssm_client = session.client('ssm')
     eureka_parameter = ssm_client.get_parameter(Name='/config/prediction/eureka.client.serviceUrl.defaultZone', WithDecryption=True)
     eureka_endpoint = eureka_parameter['Parameter']['Value']
-    register_eureka(eureka_endpoint)
+    register_eureka(eureka_endpoint, details["address"], port)
     
 def fetch_credentials():
     logging.info("Fetching credentials")
@@ -47,13 +48,23 @@ def fetch_credentials():
         raise "Unable to fetch credentials"
     return creds
 
-def detect_region():
+def detect_connection_details():
+    metadata = fetch_instance_metadata()
+    return {
+        "region": extract_region(metadata),
+        "address": extract_address(metadata)
+    }
+
+def fetch_instance_metadata():
     endpoint = os.environ.get("ECS_CONTAINER_METADATA_URI")
     if endpoint is None:
         raise "Could not detect ECS enviroment"
     r = requests.get(endpoint)
-    response = r.json()
-    text = response['Labels']['com.amazonaws.ecs.task-arn']
+    return r.json()
+
+
+def extract_region(metadata):
+    text = metadata['Labels']['com.amazonaws.ecs.task-arn']
     region_search = re.search('^arn:aws:ecs:(.*?):.*$', text, re.IGNORECASE)
     if not region_search:
         raise "Bad metadata response"
@@ -61,10 +72,19 @@ def detect_region():
     logging.info(f"The detected region is: {region}")
     return region
 
+def extract_address(metadata):
+    networks = metadata["Networks"]
+    if len(networks) < 1:
+        raise "No networks available"
+    first_network = networks[0]
+    addresses = first_network["IPv4Addresses"]
+    if len(addresses) < 1:
+        raise "No addresses available"
+    return addresses[0]
 
-
-def register_eureka(eureka_endpoint):
+def register_eureka(eureka_endpoint, address, port):
     logging.info(f"Registering eureka client with endpoint {eureka_endpoint}")
     eureka_client.init(eureka_server=eureka_endpoint,
                                 app_name="prediction",
-                                instance_port=PORT)
+                                instance_port=port,
+                                instance_ip=address)

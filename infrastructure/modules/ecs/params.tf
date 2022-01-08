@@ -1,5 +1,5 @@
 locals {
-    svc_names = toset(["account-management", "prediction-management"])
+    svc_names = toset(["account-management", "prediction-management", "orchestration"])
 }
 
 resource "aws_ssm_parameter" "issuer" {

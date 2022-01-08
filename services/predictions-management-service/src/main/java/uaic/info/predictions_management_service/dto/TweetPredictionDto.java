@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class TweetPredictionDto {
+    @NotNull private Long id;
     @NotNull private Long userId;
     @NotNull @Min(0) Integer predictedNumberOfLikes;
     @NotNull String tweetText;
@@ -24,7 +25,8 @@ public class TweetPredictionDto {
         tweetPredictionDto.setTweetText(tweetPrediction.getTweetText());
         tweetPredictionDto.setImageData(new String(tweetPrediction.getImageData()));
         tweetPredictionDto.setPredictedNumberOfLikes(tweetPrediction.getPredictedNumberOfLikes());
-        tweetPredictionDto.setUserId(tweetPredictionDto.getUserId());
+        tweetPredictionDto.setUserId(tweetPrediction.getUser().getId());
+        tweetPredictionDto.setId(tweetPrediction.getId());
         return tweetPredictionDto;
     }
 }

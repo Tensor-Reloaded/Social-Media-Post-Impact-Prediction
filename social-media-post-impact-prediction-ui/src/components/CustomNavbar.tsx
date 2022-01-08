@@ -1,7 +1,9 @@
 import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
+import { useAuthorizationContext } from "../services/AuthorizationService";
 
 export default function CustomNavbar() {
+  const {state} = useAuthorizationContext()
   return (
     <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
       <Container>
@@ -12,10 +14,10 @@ export default function CustomNavbar() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/get-prediction">Get a prediction</Nav.Link>
-            <Nav.Link href="/predictions-management">
+            { state.isLoggedIn && <Nav.Link href="/get-prediction">Get a prediction</Nav.Link> }
+            { state.isLoggedIn && <Nav.Link href="/predictions-management">
               Manage predictions
-            </Nav.Link>
+            </Nav.Link>}
           </Nav>
         </Navbar.Collapse>
       </Container>

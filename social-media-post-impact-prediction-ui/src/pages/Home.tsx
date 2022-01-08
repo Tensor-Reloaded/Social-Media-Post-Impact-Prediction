@@ -1,11 +1,20 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { Button } from "react-bootstrap";
 import { Helmet } from "react-helmet";
-import { startOAuthFlow } from "../services/AuthorizationService"
+import { startOAuthFlow, useAuthorizationContext } from "../services/AuthorizationService"
 import "./css/Home.css";
 
 export default function Home() {
   const title = "Home";
+
+  const {state, logOut} = useAuthorizationContext();
+
+  var button: ReactElement;
+  if (!state.isLoggedIn) {
+    button = <Button variant="primary" onClick={startOAuthFlow}>SIGN IN WITH TWITTER</Button>
+  } else {
+    button = <Button variant="primary" onClick={logOut}>LOG OUT</Button>
+  }
 
   return (
     <>
@@ -17,9 +26,7 @@ export default function Home() {
           <h1>Social Media</h1>
           <h1 className="white-fill">Post Impact Prediction</h1>
         </div>
-        <Button variant="primary" onClick={startOAuthFlow}>
-          SIGN IN WITH TWITTER
-        </Button>
+        { button }
       </div>
     </>
   );

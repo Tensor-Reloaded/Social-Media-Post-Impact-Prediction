@@ -1,32 +1,50 @@
 package uaic.info.orchestrationservice.services;
 
-import lombok.AllArgsConstructor;
-import org.apache.commons.lang.NotImplementedException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import uaic.info.orchestrationservice.clients.AccountManagementClient;
 import uaic.info.orchestrationservice.clients.PredictionClient;
-import uaic.info.orchestrationservice.entities.Tweet;
-import uaic.info.orchestrationservice.entities.TweetMetaData;
-import uaic.info.orchestrationservice.entities.TweetPrediction;
+import uaic.info.orchestrationservice.clients.PredictionManagementClient;
+import uaic.info.orchestrationservice.dto.PredictionRequestDto;
+import uaic.info.orchestrationservice.dto.PredictionResponseDto;
+import uaic.info.orchestrationservice.dto.TweetPredictionDto;
+import uaic.info.orchestrationservice.multipart.PredictionRequest;
 
-/**
- * Facade for handling new predictions
- */
+import java.io.IOException;
+import java.util.Base64;
+
+@Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PredictionService {
     private final PredictionClient predictionClient;
-    private final AccountManagementClient accountManagementClient;
+    private final PredictionManagementClient predictionManagementClient;
 
-    public TweetPrediction predict(String tweetText, String imageData) {
-        throw new NotImplementedException();
-//        TweetMetaData meta = accountManagementClient.getUserData();
-//        Tweet tweet = Tweet.builder()
-//                .text(tweetText)
-//                .imageData(imageData)
-//                .meta(meta)
-//                .build();
-//        Integer prediction =  predictionClient.predict(tweet);
-//        return new TweetPrediction(meta.getId(), prediction);
+    public TweetPredictionDto predict(PredictionRequest body, Long userId) throws IOException {
+        log.info(String.format("Building prediction request for user %d", userId));
+        final PredictionRequestDto predictionRequestDto = new PredictionRequestDto(
+                body.getTweetText(),
+                encodeBase64(body.getImage().getBytes())
+        );
+        log.info(String.format("Calling prediction service for user %d", userId));
+        final PredictionResponseDto response = predictionClient.predict(predictionRequestDto);
+        log.info(String.format("Prediction service returned %d number of likes for user %d",
+                response.getPredictedNumberOfLikes(),
+                userId
+        ));
+        final TweetPredictionDto tweetPredictionDto = TweetPredictionDto.builder()
+                .userId(userId)
+                .tweetText(predictionRequestDto.getTweetText())
+                .imageData(predictionRequestDto.getB64ImageData())
+                .predictedNumberOfLikes(response.getPredictedNumberOfLikes())
+                .build();
+        log.info(String.format("Calling Prediction Management Client for user %d", userId));
+        predictionManagementClient.createPrediction(tweetPredictionDto);
+        log.info(String.format("Successfully informed prediction management client for user id %d", userId));
+        return tweetPredictionDto;
+    }
+
+    private static String encodeBase64(byte[] imageData) {
+        return Base64.getEncoder().encodeToString(imageData);
     }
 }

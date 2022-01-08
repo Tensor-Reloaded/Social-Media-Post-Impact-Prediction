@@ -38,7 +38,7 @@ public class TweetPredictionsService {
     }
 
     public List<TweetPredictionDto> getAllByUserId(Long userId) {
-        userService.checkIfExists(userId);
+        userService.createIfNotExists(userId);
 
         return tweetPredictionsRepository.findAll().stream()
                 .filter(prediction -> prediction.getUser().getId().equals(userId)) //TODO: Null pointer here
@@ -55,7 +55,11 @@ public class TweetPredictionsService {
     }
 
     public void removeById(Long id, Long userId) {
-        TweetPrediction tweetPrediction = getById(id, userId);
+        userService.checkIfExists(userId);
+        final TweetPrediction tweetPrediction = getById(id, userId);
+        final User user = tweetPrediction.getUser();
+        user.getPredictions().remove(tweetPrediction);
         tweetPredictionsRepository.delete(tweetPrediction);
+        usersRepository.save(user);
     }
 }
