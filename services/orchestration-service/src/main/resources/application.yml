@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: orchestration
+server:
+  port: 80
+eureka:
+  instance:
+    preferIpAddress: true
+    prefer-ip-address: true
+    health-check-url-path: "/actuator/health"
+ribbon:
+  eager-load:
+    enabled: true
+  eureka:
+    enabled: true
+  ConnectTimeout: 5000
+  ReadTimeout: 120000 #2 minutes
+zuul:
+  sensitiveHeaders: Cookie,Set-Cookie
+  ignored-services: '*'
+  routes:
+    account-management:
+      path: "/api/v1/oauth/**"
+      strip-prefix: false
+      serviceId: account-management
+    account-management-status:
+      path: "/api/v1/status/**"
+      strip-prefix: false
+      serviceId: account-management
+    prediction-management:
+      path: "/api/v1/predictions/**"
+      strip-prefix: false

@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    discovery:
+      enabled: false
+    config:
+      discovery:
+        enabled: false
+      enabled: false
+aws:
+  paramstore:
+    enabled: false
+#cloud:
+#  aws:
+#    region:
+#      static: eu-west-1
+eureka:
+  client:
+    enabled: false
+cloud:
+  aws:
+    stack:
+      auto: false
+

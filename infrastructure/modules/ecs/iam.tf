@@ -11,6 +11,16 @@ data "aws_ami" "ecs_ami" {
   }
 }
 
+/*
+ * Creattcloudwatch policy
+ */
+
+resource "aws_iam_role_policy" "cloudwatch_policy" {
+  name = "ECS-CloudWatchLogs"
+  role  = aws_iam_role.ecsInstanceRole.id
+  policy = var.cloudWatchPolicy
+}
+
 
 /*
  * Create ECS IAM Instance Role and Policy
@@ -50,42 +60,48 @@ resource "aws_iam_role_policy" "ecsServiceRolePolicy" {
   policy = var.ecsServiceRolePolicy
 }
 
+resource "aws_iam_role_policy" "ecsServiceParamRolePolicy" {
+  name   = "ecsServiceParamRolePolicy-${random_id.code.hex}"
+  role   = aws_iam_role.ecsInstanceRole.id
+  policy = var.ecsServiceParamRolePolicy
+}
+
 resource "aws_iam_instance_profile" "ecsInstanceProfile" {
   name = "ecsInstanceProfile-${random_id.code.hex}"
   role = aws_iam_role.ecsInstanceRole.name
 }
 
-resource "aws_iam_user" "github_user" {
-    name = "smpip_github_user"
-    path = "/"
-    tags = {
-        "Name" = "smpip_github_user"
-    }
-}
-
-resource "aws_iam_access_key" "github_user_key" {
-    user = aws_iam_user.github_user.name
-}
-
-resource "aws_iam_user_policy" "github_user_policy" {
-  name = "smpip_github_user_policy"
-  user = aws_iam_user.github_user.name
-
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "ec2:Describe*",
-        ]
-        Effect   = "Allow"
-        Resource = "*"
-      },
-    ]
-  })
-}
+# resource "aws_iam_user" "github_user" {
+#     name = "smpip_github_user"
+#     path = "/"
+#     tags = {
+#         "Name" = "smpip_github_user"
+#     }
+# }
+# 
+# resource "aws_iam_access_key" "github_user_key" {
+#     user = aws_iam_user.github_user.name
+# }
+# 
+# resource "aws_iam_user_policy" "github_user_policy" {
+#   name = "smpip_github_user_policy"
+#   user = aws_iam_user.github_user.name
+# 
+#   # Terraform's "jsonencode" function converts a
+#   # Terraform expression result to valid JSON syntax.
+#   policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Action = [
+#           "ec2:Describe*",
+#         ]
+#         Effect   = "Allow"
+#         Resource = "*"
+#       },
+#     ]
+#   })
+# }
 
 /*
  * ECS related variables
@@ -138,7 +154,8 @@ variable "ecsInstancerolePolicy" {
         "ecr:GetDownloadUrlForLayer",
         "ecr:BatchGetImage",
         "logs:CreateLogStream",
-        "logs:PutLogEvents"
+        "logs:PutLogEvents",
+        "sts:AssumeRole"
       ],
       "Resource": "*"
     }
@@ -186,6 +203,52 @@ variable "ecsServiceRolePolicy" {
       "Resource": "*"
     }
   ]
+}
+EOF
+}
+
+variable "cloudWatchPolicy" {
+  default = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:*:*"
+            ]
+        }
+    ]
+}
+EOF
+}
+
+variable "ecsServiceParamRolePolicy" {
+    default =<<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+               "autoscaling:DescribeAutoScalingInstances",
+               "ssm:PutParameter",
+               "ssm:GetParameter",
+               "ssm:GetParameters",
+               "ssm:DeleteParameter",
+               "ssm:GetParameterHistory",
+               "ssm:DeleteParameters",
+               "ssm:GetParametersByPath"
+             ],
+            "Resource": ["*"]
+        }
+    ]
 }
 EOF
 }

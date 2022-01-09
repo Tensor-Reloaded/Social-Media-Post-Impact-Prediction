@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: account-management
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    hibernate:
+      ddl-auto: create-drop
+server:
+  port: 80
+eureka:
+  instance:
+    preferIpAddress: true
+    prefer-ip-address: true
+    health-check-url-path: "/actuator/health"

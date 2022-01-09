@@ -13,7 +13,7 @@ provider "aws" {
 
 # Configure S3 bucket for terraform backend
 resource "aws_s3_bucket" "s3_bucket_terraform_backend" {
-  bucket = "smpip-terraform-backend"
+  bucket = "smpip-terraform-backendv2"
   acl    = "private"
 
   tags = {

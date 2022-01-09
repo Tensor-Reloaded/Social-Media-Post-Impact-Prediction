@@ -6,4 +6,5 @@ COPY ./ /usr/local/app/
 RUN npm run prod
 FROM nginx:stable-alpine
 COPY --from=build /usr/local/app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80

@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: prediction-management
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    hibernate:
+      ddl-auto: create-drop
+server:
+  port: 80
+eureka:
+  instance:
+    prefer-ip-address: true
+    preferIpAddress: true
+    health-check-url-path: "/actuator/health"

@@ -13,3 +13,7 @@ output "services_subnet_id" {
 output "services_cidr" {
     value = aws_subnet.services_subnet.cidr_block
 }
+
+output "db_subnet_ids" {
+    value = [aws_subnet.db_subnet1.id, aws_subnet.db_subnet2.id]
+}

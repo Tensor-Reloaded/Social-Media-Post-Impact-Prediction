@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: eureka
+server:
+  port: 80
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+  server:
+    enable-self-preservation: false

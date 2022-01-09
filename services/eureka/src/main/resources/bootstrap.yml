@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    inetutils:
+      ignored-interfaces:
+        - docker0
+        - ecs.*
+        - ecs*
+        - ecs
+      preferred-networks:
+        - 10.0
+cloud:
+  aws:
+    region:
+      static: eu-west-1
+    stack:
+      auto: false
+aws:
+  paramstore:
+    enabled: true
+    prefix: /config
+    default-context: application
+    profile-separator: _
