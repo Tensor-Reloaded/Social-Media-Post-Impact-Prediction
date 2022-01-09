@@ -3,19 +3,21 @@ package uaic.info.account_management_service.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 import uaic.info.account_management_service.dto.BearerToken;
 import uaic.info.account_management_service.dto.RedirectURL;
-import uaic.info.account_management_service.entities.Account;
+import uaic.info.account_management_service.dto.PostDto;
 
+import java.io.ByteArrayInputStream;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -37,6 +39,8 @@ public class TwitterService {
         final var requestToken = requestTokenMap.get(requestTokenString);
         final var accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
         log.info("Successfully generated bearer token");
+        accountService.updateUser(accessToken);
+        log.info(String.format("Successfully updated user credentials for %s", accessToken.getUserId()));
         return new BearerToken(jwtService.generate(accessToken.getUserId()));
     }
 
@@ -49,14 +53,13 @@ public class TwitterService {
         return new RedirectURL(requestToken.getAuthorizationURL());
     }
 
-    private void ensureUserExists(twitter4j.auth.AccessToken accessToken) {
-        Long twitterId = accessToken.getUserId();
-        String twitterName = accessToken.getScreenName();
-        Optional<Account> queryResponse = accountService.getByTwitterId(twitterId);
-        if (queryResponse.isEmpty()) {
-            Account account = new Account();
-            account.setId(twitterId);
-            accountService.createNewAccount(account);
-        }
+    public void postTweet(Long twitterId, PostDto prediction) throws TwitterException {
+        final AccessToken accessToken = accountService.fetchCredentials(twitterId);
+        twitter.setOAuthAccessToken(accessToken);
+        final StatusUpdate statusUpdate = new StatusUpdate(prediction.getTweetText());
+        final String name = String.valueOf(prediction.hashCode()) + ".jpg";
+        final byte[] contents = Base64.getDecoder().decode(prediction.getImageData());
+        statusUpdate.setMedia(name, new ByteArrayInputStream(contents));
+        twitter.updateStatus(statusUpdate);
     }
 }

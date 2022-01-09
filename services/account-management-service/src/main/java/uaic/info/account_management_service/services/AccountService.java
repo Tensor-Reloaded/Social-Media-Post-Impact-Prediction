@@ -2,6 +2,7 @@ package uaic.info.account_management_service.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import twitter4j.auth.AccessToken;
 import uaic.info.account_management_service.entities.Account;
 import uaic.info.account_management_service.exceptions.EntityNotFoundException;
 import uaic.info.account_management_service.repositories.AccountRepository;
@@ -21,15 +22,32 @@ public class AccountService {
     }
 
     public void removeById(Long id) {
-        if(accountRepository.existsById(id))
+        if (accountRepository.existsById(id))
             accountRepository.deleteById(id);
-    }
-
-    public void createNewAccount(Account account) {
-        accountRepository.save(account);
     }
 
     public Optional<Account> getByTwitterId(Long twitterId) {
         return accountRepository.findById(twitterId);
+    }
+
+
+    public void updateUser(AccessToken accessToken) {
+        Optional<Account> queryResponse = getByTwitterId(accessToken.getUserId());
+        final Account account = queryResponse.orElseGet(Account::new);
+        account.setId(accessToken.getUserId());
+        account.setKey(accessToken.getToken());
+        account.setSecret(accessToken.getTokenSecret());
+        accountRepository.save(account);
+    }
+
+    public AccessToken fetchCredentials(long twitterId) {
+        final Optional<Account> account = getByTwitterId(twitterId);
+        if (account.isEmpty()) {
+            throw new javax.persistence.EntityNotFoundException();
+        }
+        if (account.get().getKey() == null || account.get().getSecret() == null) {
+            throw new IllegalStateException();
+        }
+        return new AccessToken(account.get().getKey(), account.get().getSecret());
     }
 }

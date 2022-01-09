@@ -22,6 +22,11 @@ zuul:
     account-management:
       path: "/api/v1/oauth/**"
       strip-prefix: false
+      serviceId: account-management
+    account-management-status:
+      path: "/api/v1/status/**"
+      strip-prefix: false
+      serviceId: account-management
     prediction-management:
       path: "/api/v1/predictions/**"
       strip-prefix: false

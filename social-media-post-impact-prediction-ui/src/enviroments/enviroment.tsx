@@ -3,7 +3,8 @@ const config = {
     oauthRedirectEndpoint: "oauth/authorize",
     oauthBearerEndpoint: "oauth/verify",
     allPredictionsEndpoint: "predictions",
-    predictEndpoint: "predict"
+    predictEndpoint: "predict",
+    updateStatusEndpoint: "status"
 }
 
 export default config;

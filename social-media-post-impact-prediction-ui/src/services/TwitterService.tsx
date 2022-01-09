@@ -2,6 +2,9 @@ import { Post } from "../models/Post";
 import axios from 'axios';
 import queryString from 'query-string';
 import { useEffect } from 'react';
+import { Prediction } from "../models/Prediction";
+import { StatusUpdate } from "../models/StatusUpdate";
+import config from "../enviroments/enviroment";
 
 
 function getRedirectURL() : Promise<string | void> {
@@ -53,4 +56,16 @@ export function signIn(): void {
     }, []);
 }
 
-export function postTweet(post: Post): void {}
+export function postTweet(token: string, post: StatusUpdate): Promise<void> {
+    return axios
+        .post<void>(
+            config.apiPrefix + config.updateStatusEndpoint,
+            post, {
+                headers: {
+                    "Authorization": `${token}`
+                }
+            })
+        .then(() => {
+            console.log("Succesfully posted status update");
+        })
+}

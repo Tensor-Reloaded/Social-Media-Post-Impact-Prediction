@@ -4,21 +4,21 @@ import { useRef } from "react";
 import { ChangeEvent } from "react";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
 import { Helmet } from "react-helmet";
+import { Post } from "../models/Post";
+import { Prediction } from "../models/Prediction";
 import { useAuthorizationContext } from "../services/AuthorizationService";
 import { getPrediction } from "../services/PredictionService";
 import { postTweet } from "../services/TwitterService";
 import "./css/GetPrediction.css";
 
 export default function GetPrediction() {
-  const {state} = useAuthorizationContext();
+  const { state } = useAuthorizationContext();
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [predictedNumberOfLikes, setPredictedNumberOfLikes] = useState(0);
-  const [
-    isPredictedNumberOfLikesDisplayed,
-    setIsPredictedNumberOfLikesDisplayed,
-  ] = useState(false);
+  const [prediction, setPrediction] = useState<Prediction>(null);
+  const [isPredictedNumberOfLikesDisplayed, setIsPredictedNumberOfLikesDisplayed] = useState(false);
   const fileInput = useRef(null);
   const title = "Get a prediction";
 
@@ -28,6 +28,17 @@ export default function GetPrediction() {
     } else {
       setImage(null);
     }
+  }
+
+  function getImageB64(img): Promise<string> {
+    return new Promise((res) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(img);
+      reader.onload = () => {
+        const dataUrl: string = reader.result as string;
+        res(dataUrl.replace("data:", "").replace(/^.+,/, ""));
+      }
+    })
   }
 
   useEffect(() => {
@@ -97,8 +108,12 @@ export default function GetPrediction() {
             <Button
               variant="primary"
               onClick={() => {
-                postTweet({ description, image });
-                // TODO: create prediction
+                getImageB64(image).then(imageData => {
+                  postTweet(state.bearer, {
+                    tweetText: description,
+                    imageData
+                  })
+                });
               }}
             >
               POST ON TWITTER
