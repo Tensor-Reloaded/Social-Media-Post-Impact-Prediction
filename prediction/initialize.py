@@ -35,10 +35,18 @@ def before_all(port):
                 region_name = details["region"]
             )
     logging.info("Fetching remote parameters")
+    eureka_endpoint, bucket = fetch_parameters()
+    os.environ["bucket"] = bucket
+    register_eureka(eureka_endpoint, details["address"], port)
+
+
+def fetch_parameters():
     ssm_client = session.client('ssm')
     eureka_parameter = ssm_client.get_parameter(Name='/config/prediction/eureka.client.serviceUrl.defaultZone', WithDecryption=True)
     eureka_endpoint = eureka_parameter['Parameter']['Value']
-    register_eureka(eureka_endpoint, details["address"], port)
+    bucket = ssm_client.get_parameter(Name='/config/prediction/bucket', WithDecryption=True)
+    return eureka_endpoint, bucket 
+
     
 def fetch_credentials():
     logging.info("Fetching credentials")
@@ -47,6 +55,7 @@ def fetch_credentials():
     if creds is None:
         raise "Unable to fetch credentials"
     return creds
+
 
 def detect_connection_details():
     metadata = fetch_instance_metadata()

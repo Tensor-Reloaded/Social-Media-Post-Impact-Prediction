@@ -58,3 +58,7 @@ module "rds" {
   db_subnet_ids = module.networking.db_subnet_ids
   allowed_sg_ids = module.ecs.sgs
 }
+
+module "s3" {
+  source = "../modules/s3"
+}
