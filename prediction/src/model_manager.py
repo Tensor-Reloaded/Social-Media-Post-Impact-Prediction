@@ -1,3 +1,4 @@
+import logging
 from transformers import AutoModel, BertTokenizerFast
 import torchvision
 import torch
