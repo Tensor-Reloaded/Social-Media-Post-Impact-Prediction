@@ -153,3 +153,4 @@ fabric.properties
 # Custom
 conf/env_secrets.py
 src_test
+*.h5

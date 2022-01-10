@@ -6,7 +6,7 @@ import logging
 app = Flask(__name__)
 PORT = 80
 
-@app.route('/predict', methods=['GET', 'POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     """Registry Design Pattern"""
     logging.info("POST /predict")
