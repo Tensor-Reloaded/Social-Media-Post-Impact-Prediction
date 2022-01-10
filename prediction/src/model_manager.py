@@ -2,13 +2,30 @@ from transformers import AutoModel, BertTokenizerFast
 import torchvision
 import torch
 from src.model_architecture import HybridModel, BERT_Arch, get_decoder
-from utils.image_preprocessing import preprocess_image
-from utils.text_preprocessing import preprocess_text
+from src.utils.image_preprocessing import preprocess_image
+from src.utils.text_preprocessing import preprocess_text
 import numpy as np
 
 MODEL_PATH = "model3.h5"
 MAX_SEQ_LEN = 22
 NR_CLASSES = 10
+
+
+def _postprocess_prediction(number):
+    label_ranges = [0.0,
+                    7.0,
+                    15.0,
+                    23.0,
+                    39.0,
+                    106.0,
+                    441.0,
+                    830.0,
+                    2958.4000000000087,
+                    17284.0,
+                    1212284.0]
+    return {
+        "predictedNumberOfLikes": int((label_ranges[number]+label_ranges[number + 1])/2)
+    }
 
 
 class ModelManager:
@@ -22,28 +39,31 @@ class ModelManager:
     def change_model(cls, request_data):
         pass
 
+    @classmethod
     def get_one_model_prediction(cls, image, text):
-        image = preprocess_image(image)
-        text = preprocess_text(text)
-        text_tokens = cls.tokenizer.tokenize(text)
-        seq = torch.tensor(text_tokens['input_ids'])
-        mask = torch.tensor(text_tokens['attention_mask'])
-        image = torch.from_numpy(image)
-        seq.to(cls.device)
-        image.to(cls.device)
-        mask.to(cls.device)
-        image = image / 255.0
-        image_for_pred = image.permute([2, 1, 0])
-        prediction = cls.model(image_for_pred.unsqueeze(0), seq.unsqueeze(0), mask.unsqueeze(0))
-        prediction = prediction.cpu()
-        return np.argmax(prediction)
+        with torch.no_grad():
+            image = preprocess_image(image)
+            text = preprocess_text(text)
+            text_tokens = cls.tokenizer.encode_plus(text)
+            seq = torch.tensor(text_tokens['input_ids'])
+            mask = torch.tensor(text_tokens['attention_mask'])
+            image = torch.from_numpy(image)
+            seq.to(cls.device)
+            image.to(cls.device)
+            mask.to(cls.device)
+            image = image / 255.0
+            image_for_pred = image.permute([2, 1, 0])
+            prediction = cls.model(image_for_pred.unsqueeze(0), seq.unsqueeze(0), mask.unsqueeze(0))
+            prediction = prediction.cpu()
+            prediction_class = np.argmax(prediction)
+        return _postprocess_prediction(prediction_class)
 
     @classmethod
     def _load_torch_model_from_aws_storage(cls):
-        torch.load()
+        return torch.load("res/model3.h5", map_location=cls.device)
 
     @classmethod
-    def initialize(cls, ):
+    def initialize(cls):
         cls.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         decoder = get_decoder()
         bert = AutoModel.from_pretrained('bert-base-uncased')
@@ -56,3 +76,7 @@ class ModelManager:
         cls.model.load_state_dict(cls._load_torch_model_from_aws_storage())
         cls.model.eval()
         cls.model.to(cls.device)
+
+    @classmethod
+    def is_model_loaded(cls):
+        return cls.model is not None

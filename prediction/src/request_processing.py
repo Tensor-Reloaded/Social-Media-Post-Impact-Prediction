@@ -2,11 +2,23 @@ from abc import ABC, abstractmethod
 from src.model_manager import ModelManager
 from src.predictions_strategies import PredictStrategyRegistry
 from src.requests_validator import PredictRequestValidator, ModelRequestValidator
+import base64
+import numpy as np
+import io
+from PIL import Image
+from copy import deepcopy
+
+
+def _preprocess_image_base64(image64):
+    base64_decoded = base64.b64decode(image64)
+    image = Image.open(io.BytesIO(base64_decoded))
+    image = np.array(image)
+    return image
 
 
 class RequestProcessor(ABC):
     def __init__(self, request_data):
-        self.request_data = request_data
+        self.request_data = deepcopy(request_data)
 
     @abstractmethod
     def get_response(self):
@@ -18,8 +30,12 @@ class PredictRequestProcessor(RequestProcessor):
     def get_response(self):
         if not PredictRequestValidator.is_valid(self.request_data):
             return "Invalid syntax for request", 400
-        strategy = PredictStrategyRegistry.get(self.request_data)
-        return strategy.apply(None)
+        if not ModelManager.is_model_loaded():
+            return "Model not ready", 405
+        data = deepcopy(self.request_data)
+        data["b64ImageData"] = _preprocess_image_base64(data["b64ImageData"])
+        strategy = PredictStrategyRegistry.get(data)
+        return strategy.apply(data)
 
 
 class ModelRequestProcessor(RequestProcessor):
