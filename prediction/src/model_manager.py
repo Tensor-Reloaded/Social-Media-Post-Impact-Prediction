@@ -1,3 +1,4 @@
+import logging
 from transformers import AutoModel, BertTokenizerFast
 import torchvision
 import torch
@@ -7,6 +8,7 @@ from src.utils.text_preprocessing import preprocess_text
 import numpy as np
 import s3fs
 import os
+import io
 
 MODEL_PATH = "model3.h5"
 MAX_SEQ_LEN = 22
@@ -71,7 +73,7 @@ class ModelManager:
 #       return torch.load("res/model3.h5", map_location=cls.device)
 
     @classmethod
-    async def initialize(cls):
+    def initialize(cls):
         logging.info("Starting model initiation")
         cls.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         decoder = get_decoder()

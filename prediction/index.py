@@ -2,11 +2,17 @@ from flask import Flask, request, jsonify
 from src.request_processing import PredictRequestProcessor, ModelRequestProcessor
 from initialize import before_all
 import logging
+import threading
+import asyncio
 from src.model_manager import ModelManager
 import asyncio
 
 app = Flask(__name__)
 PORT = 80
+
+
+def initialize_all():
+    ModelManager.initialize()
 
 
 @app.route('/predict', methods=['POST'])
@@ -30,5 +36,6 @@ def model():
 
 if __name__ == '__main__':
     before_all(PORT)
-    asyncio.create_task(ModelManager.initialize())
+    init_thread = threading.Thread(target=initialize_all)
+    init_thread.start()
     app.run(host="0.0.0.0", port=PORT, debug=True)
