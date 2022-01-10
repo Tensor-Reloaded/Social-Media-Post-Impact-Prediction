@@ -13,7 +13,7 @@ resource "aws_ecs_task_definition" "services" {
           name      = each.key
           image     = var.repositories[each.key]
           cpu       = 512
-          memory    = each.key != "prediction" ? 850 : 6144
+          memory    = each.key != "prediction-service" ? 850 : 6144
           essential = true
           portMappings = [
             {

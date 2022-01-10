@@ -3,6 +3,7 @@ from src.request_processing import PredictRequestProcessor, ModelRequestProcesso
 from initialize import before_all
 import logging
 from src.model_manager import ModelManager
+import asyncio
 
 app = Flask(__name__)
 PORT = 80
@@ -28,6 +29,6 @@ def model():
 
 
 if __name__ == '__main__':
-    # before_all(PORT)
-    ModelManager.initialize()
+    before_all(PORT)
+    asyncio.create_task(ModelManager.initialize())
     app.run(host="0.0.0.0", port=PORT, debug=True)

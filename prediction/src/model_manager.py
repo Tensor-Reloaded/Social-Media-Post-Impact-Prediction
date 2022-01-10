@@ -5,6 +5,8 @@ from src.model_architecture import HybridModel, BERT_Arch, get_decoder
 from src.utils.image_preprocessing import preprocess_image
 from src.utils.text_preprocessing import preprocess_text
 import numpy as np
+import s3fs
+import os
 
 MODEL_PATH = "model3.h5"
 MAX_SEQ_LEN = 22
@@ -60,20 +62,31 @@ class ModelManager:
 
     @classmethod
     def _load_torch_model_from_aws_storage(cls):
-        return torch.load("res/model3.h5", map_location=cls.device)
+       logging.info(f"Mounting S3 bucket {os.environ['bucket']}")
+       s3 = s3fs.S3FileSystem(anon=True)
+       with s3.open(os.environ["bucket"] + "/model3.h5", "rb") as f:
+           buffer = io.BytesIO(f.read())
+       logging.info("Succesfully loaded model from S3")
+       return torch.load(buffer, map_location=cls.device)
+#       return torch.load("res/model3.h5", map_location=cls.device)
 
     @classmethod
-    def initialize(cls):
+    async def initialize(cls):
+        logging.info("Starting model initiation")
         cls.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         decoder = get_decoder()
+        logging.info("Downloading BERT")
         bert = AutoModel.from_pretrained('bert-base-uncased')
         text_model = BERT_Arch(bert, NR_CLASSES)
+        logging.info("Downloading Resnet")
         image_model = torchvision.models.resnet18(pretrained=True)
         num_ftrs = image_model.fc.in_features
         image_model.fc = torch.nn.Linear(num_ftrs, NR_CLASSES)
+        logging.info("Downloading Tokenizer")
         cls.tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased')
         cls.model = HybridModel(image_model, text_model, decoder)
         cls.model.load_state_dict(cls._load_torch_model_from_aws_storage())
+        logging.info("Loading Model from S3")
         cls.model.eval()
         cls.model.to(cls.device)
 

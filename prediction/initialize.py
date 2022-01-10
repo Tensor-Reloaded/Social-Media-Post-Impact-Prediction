@@ -26,26 +26,26 @@ dictConfig({
 
 def before_all(port):
     logging.info("Runing before all block")
-    creds = fetch_credentials()
     details = detect_connection_details()
+    logging.info("Fetching remote parameters")
+    eureka_endpoint, bucket = fetch_parameters(details)
+    os.environ["bucket"] = bucket
+    register_eureka(eureka_endpoint, details["address"], port)
+
+
+def fetch_parameters(details):
+    creds = fetch_credentials()
     session = boto3.Session(
                 aws_access_key_id=creds.access_key,
                 aws_secret_access_key=creds.secret_key,
                 aws_session_token=creds.token,
                 region_name = details["region"]
             )
-    logging.info("Fetching remote parameters")
-    eureka_endpoint, bucket = fetch_parameters()
-    os.environ["bucket"] = bucket
-    register_eureka(eureka_endpoint, details["address"], port)
-
-
-def fetch_parameters():
     ssm_client = session.client('ssm')
     eureka_parameter = ssm_client.get_parameter(Name='/config/prediction/eureka.client.serviceUrl.defaultZone', WithDecryption=True)
     eureka_endpoint = eureka_parameter['Parameter']['Value']
     bucket = ssm_client.get_parameter(Name='/config/prediction/bucket', WithDecryption=True)
-    return eureka_endpoint, bucket 
+    return eureka_endpoint, bucket['Parameter']['Value']
 
     
 def fetch_credentials():
