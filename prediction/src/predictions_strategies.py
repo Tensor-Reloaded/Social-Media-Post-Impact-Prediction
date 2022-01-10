@@ -15,7 +15,14 @@ class RandomStrategy(PredictionStrategy):
         return str(randint(0, 1000000))
 
 
+class ModelPredictionStrategy(PredictionStrategy):
+    @staticmethod
+    def apply(data):
+        text = data["tweetText"]
+        image64encoded = data["b64ImageData"]
+
+
 class PredictStrategyRegistry:
     @staticmethod
     def get(data):
-        return RandomStrategy
+        return ModelPredictionStrategy

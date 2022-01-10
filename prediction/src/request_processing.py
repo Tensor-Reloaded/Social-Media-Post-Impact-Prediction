@@ -19,7 +19,7 @@ class PredictRequestProcessor(RequestProcessor):
         if not PredictRequestValidator.is_valid(self.request_data):
             return "Invalid syntax for request", 400
         strategy = PredictStrategyRegistry.get(self.request_data)
-        return strategy.apply(None)
+        return strategy.apply(self.request_data)
 
 
 class ModelRequestProcessor(RequestProcessor):

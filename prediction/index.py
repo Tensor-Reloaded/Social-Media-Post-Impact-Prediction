@@ -4,7 +4,7 @@ from src.request_processing import PredictRequestProcessor, ModelRequestProcesso
 app = Flask(__name__)
 
 
-@app.route('/predict', methods=['GET', 'POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     """Registry Design Pattern"""
     request_data = request.json
