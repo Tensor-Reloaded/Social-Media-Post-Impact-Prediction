@@ -15,6 +15,10 @@ FII's Master students ASET Social Media Post Impact Prediction project
 
 Team coordinator: Simionescu Cristian
 
+[Technical report](https://www.overleaf.com/read/msccvfhyxdqp)
+
 [Google Docs](https://docs.google.com/document/d/17-i0q_29vPZMftnWDd8_PdwHBRvu75ktIhGteaEPhDM/edit#heading=h.1endmhexzdq3)
 
 [~~Trello~~](https://trello.com/b/0rzeIAg8/aset-2021-2022)
+
+
