@@ -7,6 +7,6 @@ pytorch-lightning==1.4.4
 pytorch-ignite==0.4.7
 torchvision==0.10.1
 transformers==4.12.5
-Pillow==9.0.0
+Pillow==9.0.1
 torch==1.9.1
 s3fs==0.4.2
